@@ -71,25 +71,6 @@ namespace SmartCar
             int i = GetPrivateProfileString(Section, Key, "", temp, 500, inipath);
             return temp.ToString();
         }
-        /// <summary>
-        /// 读出INI对应布尔值
-        /// </summary>
-        /// <param name="Section">节点名</param>
-        /// <param name="Key">键名</param>
-        /// <returns>bool类型</returns>
-        public static bool IniReadBool(string Section, string Key)
-        {
-            StringBuilder temp = new StringBuilder(500);
-            int i = GetPrivateProfileString(Section, Key, "", temp, 500, inipath);
-            if(temp.ToString()=="True")
-            {
-                return true;
-            }
-            else 
-            {
-                return false;
-            }
-        }
         /// <summary> 
         /// 验证文件是否存在 
         /// </summary> 
