@@ -5,46 +5,42 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.IO.Ports;
-using System.Net;
-using System.Net.Sockets;
-using System.Threading;
 using System.Windows.Forms;
 using ThevePictureProcessDll;
 using TheveSmartCar.Properties;
-using static TheveSmartCar.ThevePictureProcess;
 
 namespace TheveSmartCar
 {
     public partial class SmartCarMain : Form
     {
-        //开关：是否进入Debug模式
-        bool IsDebugMode = false;
-        //跳过运行程序
-        bool isPassCompileRun = false;
-        //接收图像数据
+        bool Unique = false;
+        int transFlag = 0;
+        int PictureReceiveCount = 0;
         List<Byte> listRecvPicData = new List<byte>();
+        int ReceiveDataCount = 0;
+        bool StartReceiveFlag = false;
+        Toolss t;
+        List<string> listFilePath = new List<string>();
         private void Form1_Load(object sender, EventArgs e)
         {
-
             TheveIniFiles.InitPath(Application.StartupPath + @"\SmartCarConfig.ini");
             VerifyState();
             //初始化串口
             TheveSerialPort.Scan(comboBoxCom);
             //自恢复 
             buttonIniRecover_Click(null, null);
+            ButtonEnable(false);
             //连续时间刻度
             ThevePictureProcess.InitInterval(comboBoxAutoInterval);
-            //串口获取 
+            //串口获取
+            TheveSerialPort.Scan(comboBoxCom);
             TheveSerialPort.SetBund(comboBoxBaud);
             ThevePictureReceive.CheckAndCreatDirection();
-            TheveGridView.Init(dataGridView1);
             HelpText();
+            labelOrinial.Text = "";
+
         }
-        #region 本地图像处理
-        //显示模式
-        int modeDisplayTrans = 0;
-        //文件夹文件路径
-        List<string> listFilePath = new List<string>();
+        #region 图像处理
         //浏览文件夹
         private void buttonDirectionBmp_Click(object sender, EventArgs e)
         {
@@ -53,6 +49,17 @@ namespace TheveSmartCar
             if (textBoxDirectionBmp.Text != "")
             {
                 GetDirectionFiles(textBoxDirectionBmp.Text);
+            }
+        }
+        //获取文件夹内的文件列表
+        private void GetDirectionFiles(string directionPath)
+        {
+            listFilePath = TheveFile.GetAllFilePath(directionPath);
+            ThevePictureProcess.PicCount = 0;
+            labelPicAllNum.Text = "图片总数：" + listFilePath.Count;
+            if (listFilePath.Count > 0)
+            {
+                TheveMenuStrip.DirectionRecent(ToolStripMenuItemFile, textBoxDirectionBmp.Text, true);
             }
         }
         //跳转
@@ -69,108 +76,12 @@ namespace TheveSmartCar
             catch (Exception)
             {
                 MessageBox.Show("请输入正确数字", "错误");
-                return;
+                throw;
             }
             GetBmpInfo();
-        }
-        //锁定
-        private void buttonCodeLock_Click(object sender, EventArgs e)
-        {
-            if (buttonCodeLock.Text == "锁定(&D)")
-            {
-                ButtonLocalEnable(true);
-                buttonCodeLock.Text = "解锁(&D)";
-            }
-            else
-            {
-                //取消连续
-                if (buttonAutoInterval.Text != "连续(&A)")
-                {
-                    buttonAutoInterval_Click(null, null);
-                }
-                ThevePictureProcess.isCompiledCode = false;
-                PicPro.ClearInherit();
-                ButtonLocalEnable(false);
-                buttonCodeLock.Text = "锁定(&D)";
-            }
-        }
-        //上一张
-        private void buttonLast_Click(object sender, EventArgs e)
-        {
-            ThevePictureProcess.PicCount--;
-            GetBmpInfo();
-        }
-        //下一张
-        private void buttonNext_Click(object sender, EventArgs e)
-        {
-            ThevePictureProcess.PicCount++;
-            GetBmpInfo();
-        }
-        //连续
-        private void buttonAutoInterval_Click(object sender, EventArgs e)
-        {
-            if (buttonAutoInterval.Text == "连续(&A)")
-            {
-                buttonAutoInterval.Text = "停止(&A)";
-                timer1.Start();
-                ThevePictureProcess.AutoPlay = true;
-            }
-            else
-            {
-                buttonAutoInterval.Text = "连续(&A)";
-                timer1.Stop();
-                ThevePictureProcess.AutoPlay = false;
-            }
-        }
-        //显示转换图
-        private void buttonChange_Click(object sender, EventArgs e)
-        {
-            modeDisplayTrans = ++modeDisplayTrans > 2 ? 0 : modeDisplayTrans;
-            switch (modeDisplayTrans)
-            {
-                case 0:
-                    isPassCompileRun = false;
-                    labelPicMode.Text = "图像模式：处理图";
-                    break;
-                case 1:
-                    isPassCompileRun = true;
-                    labelPicMode.Text = "图像模式：原图";
-                    break;
-                case 2:
-                    isPassCompileRun = false;
-                    labelPicMode.Text = "图像模式：标记图";
-                    break;
-                default:
-                    break;
-            }
-            GetBmpInfo();
-        }
-        //按钮使能
-        private void ButtonLocalEnable(bool state)
-        {
-            //锁定后 不能改 
-            textBoxDirectionBmp.Enabled = !state;
-            buttonDirectionBmp.Enabled = !state;
-            //锁定后 才能改 true
-            buttonAntiColor.Enabled = state;
-            buttonDisplayChange.Enabled = state;
-            buttonLastPic.Enabled = state;
-            buttonNextPic.Enabled = state;
-            RichTextReadState(state);
-        }
-        //获取文件夹内的文件列表
-        private void GetDirectionFiles(string directionPath)
-        {
-            listFilePath = TheveFile.GetAllFilePath(directionPath);
-            ThevePictureProcess.PicCount = 0;
-            labelPicAllCnt.Text = "图片总数：" + listFilePath.Count;
-            if (listFilePath.Count > 0)
-            {
-                TheveMenuStrip.DirectionRecent(ToolStripMenuItemFile, textBoxDirectionBmp.Text, true);
-            }
         }
         //图像处理处理
-        private void GetBmpInfo()
+        private void GetBmpInfo(bool passFlag = false)
         {
             //防止序号为负数
             if (ThevePictureProcess.PicCount < 0)
@@ -206,25 +117,41 @@ namespace TheveSmartCar
 
             labelDepth.Text = ThevePictureProcess.Depth;
             labelResoultion.Text = ThevePictureProcess.Resoultion;
-            labelPicIndex.Text = "当前图片编号：" + ThevePictureProcess.PicCount;
-            //是否跳过 编译和运行
-            if (isPassCompileRun == false)
+            labelPicNumShow.Text = "当前图片编号：" + ThevePictureProcess.PicCount;
+            //是否跳过编译
+            if (passFlag == false)
             {
-                if (CompileRunCode())
+                if (richTextBoxPicPro.Text != "" && ThevePictureProcess.ChangeFlag == false)
                 {
-                    DebugLog(listFilePath[ThevePictureProcess.PicCount].ToString() + ThevePictureProcess.Log);
+                    if (ThevePictureProcess.RunCode(richTextBoxPicPro.Text))
+                    {
+                        DebugLog(listFilePath[ThevePictureProcess.PicCount].ToString() + ThevePictureProcess.Log);
+                        labelState.Text = "状态：" + "正常";
+                    }
+                    else
+                    {
+                        MessageBox.Show(ThevePictureProcess.Log, "程序错误");
+                        labelState.Text = "状态：" + "错误";
+                        return;
+                    }
                 }
                 else
                 {
-                    return;
+                    labelState.Text = "状态：" + "原图";
                 }
             }
-            //显示  
-            pictureShow.Image = ThevePictureProcess.ShowBMP((EModeDisplay)modeDisplayTrans);
-            //参数监视器
+
+            if (transFlag == 2)//隐藏黑白
+            {
+                pictureShow.Image = ThevePictureProcess.ShowBMP(true);
+            }
+            else
+            {
+                pictureShow.Image = ThevePictureProcess.ShowBMP();
+            }
+            int a = PicPro.watch.Keys.Count;
             WatchShow();
-            //数组查看器
-            WatchArrayShow();
+            DebugLog(ThevePictureProcess.error);
         }
         //数据监视器
         private void WatchShow()
@@ -236,36 +163,130 @@ namespace TheveSmartCar
             }
             PicPro.WatchClear();
         }
-        //数组查看器
-        private void WatchArrayShow()
+        //锁定
+        private void buttonCodeLock_Click(object sender, EventArgs e)
         {
-            try
+            if (ThevePictureProcess.CodeLock == false)
             {
-                foreach (string name in PicPro.arrayTable.Keys)
+                ThevePictureProcess.CodeLock = true;
+                buttonCodeLock.Text = "解锁(&D)";
+                ButtonEnable(true);
+                richTextBoxPicPro.BackColor = Color.Gainsboro;
+                if (t != null)
                 {
-                    if (!dataGridView1.Columns.Contains(name))
-                    {
-                        int index = dataGridView1.Columns.Add(name, name);
-                        DataGridViewColumn dataGridViewColumn = dataGridView1.Columns[index];
-                        dataGridViewColumn.ReadOnly = true;
-                        dataGridViewColumn.SortMode = DataGridViewColumnSortMode.NotSortable;
-                    }
-                    TheveGridView.WriteColData(name, (int[])PicPro.arrayTable[name]);
+                    t.UniqueCodeBackColor(Color.Gainsboro);
                 }
-                PicPro.WatchArrayClear();
             }
-            catch (Exception ex)
+            else
             {
-                MessageBox.Show(ex.Message);
+                if (黑色ToolStripMenuItem.Checked == true)
+                {
+                    richTextBoxPicPro.BackColor = Color.FromArgb(51, 51, 55);
+                    if (t != null)
+                    {
+                        t.UniqueCodeBackColor(Color.FromArgb(51, 51, 55));
+                    }
+                }
+                else
+                {
+                    richTextBoxPicPro.BackColor = Color.White;
+                    if (t != null)
+                    {
+                        t.UniqueCodeBackColor(Color.White);
+                    }
+                }
+                buttonCodeLock.Text = "锁定(&D)";
+                ThevePictureProcess.RunCodeFlag = false;
+                ButtonEnable(false);
+                ThevePictureProcess.CodeLock = false;
+                if (Unique == true)
+                {
+                    richTextBoxPicPro.Text = t.synStr;
+                }
+            }
+        }
+        //上一张
+        private void buttonLast_Click(object sender, EventArgs e)
+        {
+            ThevePictureProcess.PicCount--;
+            GetBmpInfo();
+        }
+        //下一张
+        private void buttonNext_Click(object sender, EventArgs e)
+        {
+            ThevePictureProcess.PicCount++;
+            GetBmpInfo();
+        }
+        //Debug
+        private void DebugLog(string contenes)
+        {
+            if (contenes != "" && groupBox3.Visible == true)
+            {
+                textBoxDebug.AppendText(contenes + "\r\n");
+            }
+
+        }
+        //按键状态
+        private void ButtonEnable(bool state)
+        {
+            richTextBoxPicPro.ReadOnly = state;
+
+            switch (tabControlMode.SelectedIndex)
+            {
+                case 0:
+                    buttonAutoInterval.Enabled = state;
+                    buttonLast.Enabled = state;
+                    buttonNext.Enabled = state;
+                    buttonJump.Enabled = state;
+                    buttonChange.Enabled = state;
+                    textBoxDirectionBmp.Enabled = !state;
+                    buttonDirectionBmp.Enabled = !state;
+                    buttonAntiColor.Enabled = state;
+                    break;
+                case 1:
+                    textBoxPicWidth.Enabled = !state;
+                    textBoxPicHeight.Enabled = !state;
+                    buttonStartReceive.Enabled = state;
+                    buttonClearBmp.Enabled = state;
+                    buttonSaveBmp.Enabled = state;
+                    buttonTrans.Enabled = state;
+                    buttonCodeRun2.Enabled = state;
+                    break;
+                default:
+                    break;
+            }
+        }
+        #endregion
+        #region 连续功能
+        //连续
+        private void buttonAutoInterval_Click(object sender, EventArgs e)
+        {
+            if (ThevePictureProcess.AutoPlay == false)
+            {
+                timer1.Tag = "连续放图";
+                buttonAutoInterval.Text = "停止(&A)";
+                timer1.Start();
+                ThevePictureProcess.AutoPlay = true;
+            }
+            else
+            {
+                buttonAutoInterval.Text = "连续(&A)";
+                timer1.Stop();
+                ThevePictureProcess.AutoPlay = false;
             }
         }
         //定时器中断
         private void timer1_Tick(object sender, EventArgs e)
         {
-            if (ThevePictureProcess.AutoPlay)
+            switch (timer1.Tag)
             {
-                ThevePictureProcess.PicCount++;
-                GetBmpInfo();
+                case "连续放图":
+                    ThevePictureProcess.PicCount++;
+                    GetBmpInfo();
+                    break;
+                default:
+                    timer1.Stop();
+                    break;
             }
         }
         //连续时间更改
@@ -273,23 +294,25 @@ namespace TheveSmartCar
         {
             timer1.Interval = (int)(Convert.ToDouble(comboBoxAutoInterval.Text) * 1000);
         }
-        //关闭本地界面所有功能
-        private void DisadbleLocalForm()
-        {
-            if (buttonCodeLock.Text != "锁定(&D)")
-            {
-                buttonCodeLock_Click(null, null);
-            }
-        }
-
         #endregion
         #region INI设置
-        //保存程序
+        //保存INI设置
         private void buttonIniSave_Click(object sender, EventArgs e)
         {
+            TheveIniFiles.IniWriteValue("图像处理", "显示模式", TheveMenuStrip.GetMenuCheck(显示模式ToolStripMenuItem).Name);
+            TheveIniFiles.IniWriteValue("图像处理", "编译模式", TheveMenuStrip.GetMenuCheck(编译模式ToolStripMenuItem).Name);
+            TheveIniFiles.IniWriteValue("图像处理", "鼠标样式", TheveMenuStrip.GetMenuCheck(鼠标样式ToolStripMenuItem).Name);
+
+            int cnt = 0;
+            foreach (var i in ToolStripMenuItemFile.DropDownItems)
+            {
+                cnt++;
+                TheveIniFiles.IniWriteValue("文件夹记录", "最近打开的文件夹" + cnt.ToString(), i.ToString());
+            }
             File.WriteAllText(@"PicProCode.c", richTextBoxPicPro.Text);
             DebugLog("已保存设置。");
             DebugLog("图像处理程序已保存在 PicProCode.txt 文件中。");
+
         }
         //恢复INI设置
         private void buttonIniRecover_Click(object sender, EventArgs e)
@@ -334,37 +357,23 @@ namespace TheveSmartCar
 
                 textBoxPicWidth.Text = TheveIniFiles.IniReadValue("串口传图", "图像宽");
                 textBoxPicHeight.Text = TheveIniFiles.IniReadValue("串口传图", "图像高");
-                textBoxWifiWidth.Text = TheveIniFiles.IniReadValue("WIFI传图", "图像宽");
-                textBoxWifiHeight.Text = TheveIniFiles.IniReadValue("WIFI传图", "图像高");
 
                 DebugLog("已恢复设置。");
             }
 
         }
-
+        //代码同步
+        private void buttonSynchronization_Click(object sender, EventArgs e)
+        {
+            //恢复代码
+            if (File.Exists(@"PicProCode.c"))
+            {
+                richTextBoxPicPro.Text = File.ReadAllText(@"PicProCode.c");
+            }
+        }
 
         #endregion
         #region 代码框和图片框分权
-        void RichTextReadState(bool isReadOnly)
-        {
-            richTextBoxPicPro.ReadOnly = isReadOnly;
-            if (isReadOnly)
-            {
-                richTextBoxPicPro.BackColor = Color.Gainsboro;
-            }
-            else
-            {
-                //主题颜色
-                if (黑色ToolStripMenuItem.Checked == true)
-                {
-                    richTextBoxPicPro.BackColor = Color.FromArgb(51, 51, 55);
-                }
-                else
-                {
-                    richTextBoxPicPro.BackColor = Color.White;
-                }
-            }
-        }
         //去模糊
         private void pictureShow_Paint(object sender, PaintEventArgs e)
         {
@@ -401,14 +410,14 @@ namespace TheveSmartCar
         }
 
         #endregion
-        #region 环境验证 
+        #region 环境验证
+
         private void VerifyState()
         {
             buttonCodeLock.Enabled = true;
             buttonSerialOpen.Enabled = true;
-            buttonWifiLink.Enabled = true;
+            buttonLockInfo.Enabled = true;
         }
-
         #endregion
         #region 帮助
         //help
@@ -419,11 +428,11 @@ namespace TheveSmartCar
 类型[] 变量名 = new 类型[数组大小]
 例如：int[] bord_L = new int[120];
 二维数组声明方式为:
-类型[][] 变量名 = new 类型[数组大小][数组大小]
-例如：int[][] test = new int[188][120];
-其他类型可以按照C语言的格式，详情查看用户手册
-支持：char,short,int,float,double 
-不支持：指针,unsigned,#define，数组定义时初始化
+类型[,] 变量名 = new 类型[数组大小,数组大小]
+例如：int[,] test = new int[188,120];
+其他类型可以按照C语言的格式。
+支持：char,short,int,double 
+不支持：指针,unsigned,float,#define宏定义，数组定义时初始化
 
 可视化颜色修改方式如下： 
 修改颜色：PicPro.img[i][j]=255+数字；默认如下
@@ -439,27 +448,13 @@ namespace TheveSmartCar
 采用位图标准数据定义黑白色：
 0-黑色
 255-白色
-修改像素颜色：PicPro.img[i][j]=255+数字；
+修改颜色：PicPro.img[i][j]=255+数字；
 例：PicPro.img[1][1]=255+1;点（1,1）为红色
 
-参数监视器 语句调用方法为：
+参数监视器语句调用方法为：
 PicPro.Watch(“名称”，变量);
 例：PicPro.Watch(“bord_L_flag”，bord_L_flag);
-例：PicPro.Watch(“左边界标志位”，bord_L_flag); 
-
-数组查看器（一维）语句调用方法为：
-PicPro.WatchArray(“名称”，数组名);
-例：PicPro.WatchArray(“bord_L”，bord_L);
-例：PicPro.WatchArray(“左边界数组”，bord_L); 
-
-全局继承器 语句调用方法为：
-PicPro.Inherit(“名称”，变量);
-例：PicPro.Inherit(“abc”，bord_L_flag);
-int a = (int)PicPro.GetInherit(“abc”);
-(返回值为float，需强制转换为你需要的类型)
-例：PicPro.Inherit(“平均斜率”，ave_gradient);
-float ave_gradient = PicPro.GetInherit(“平均斜率”);
-
+例：PicPro.Watch(“左边界标志位”，bord_L_flag);
 程序内的代码必须为英文格式，包括上面的双引号。
 
 支持数学库：(例)
@@ -467,9 +462,9 @@ Math.Sqrt();
 Math.Abs();
 Math.Sin();
 ...
-具体内容查看用户手册。
+具体内容查看C#的Math类。
 
-如有任何疑问、建议和反馈请联系闲鱼作者“落落仪”";
+如有疑问、建议和任何反馈请联系闲鱼作者“落落仪”";
         }
         //解释性说明以下
         private void buttonDirectionBmp_MouseEnter(object sender, EventArgs e)
@@ -505,6 +500,11 @@ Math.Sin();
         {
             toolStripStatusLabel1.Text = "点击则黑白反色当前图片，只是显示反色，逻辑不反。";
         }
+        private void buttonUnique_MouseEnter(object sender, EventArgs e)
+        {
+
+            toolStripStatusLabel1.Text = "点击出现独立的程序框，可修改代码，点击锁定可同步。";
+        }
         public SmartCarMain()
         {
             InitializeComponent();
@@ -512,35 +512,37 @@ Math.Sin();
         }
         #endregion
         #region 实用小功能
-        //编译代码
-        bool CompileRunCode()
-        {
-            if (ThevePictureProcess.RunCode(richTextBoxPicPro.Text))
-            {
-                labelCompileState.Text = "状态：编译成功";
-                return true;
-            }
-            else
-            {
-                labelCompileState.Text = "状态：编译错误";
-                MessageBox.Show(ThevePictureProcess.Log, "错误");
-                return false;
-            }
-        }
         //反色
         private void buttonAntiColor_Click(object sender, EventArgs e)
         {
-            if (ThevePictureProcess.isAntiColor)
-            {
-                label01State.Text = "二值化显示状态：标准色";
-                ThevePictureProcess.isAntiColor = false;
-            }
-            else
-            {
-                label01State.Text = "二值化显示状态：反色";
-                ThevePictureProcess.isAntiColor = true;
-            }
+            ThevePictureProcess.antiColorFlag = !ThevePictureProcess.antiColorFlag;
+            labelAntiColor.Visible = ThevePictureProcess.antiColorFlag;
             GetBmpInfo();
+        }
+        //转换前后图
+        private void buttonChange_Click(object sender, EventArgs e)
+        {
+            transFlag = ++transFlag > 2 ? 0 : transFlag;
+            switch (transFlag)
+            {
+                case 0:
+                    labelOrinial.Text = "";
+                    ThevePictureProcess.ChangeFlag = false;
+                    GetBmpInfo();
+                    break;
+                case 1:
+                    labelOrinial.Text = "原图";
+                    ThevePictureProcess.ChangeFlag = true;
+                    GetBmpInfo(true);
+                    break;
+                case 2:
+                    labelOrinial.Text = "标记图";
+                    ThevePictureProcess.ChangeFlag = false;
+                    GetBmpInfo();
+                    break;
+                default:
+                    break;
+            }
         }
         //实时灰度值+鼠标样式
         private void pictureShow_MouseMove(object sender, MouseEventArgs e)
@@ -555,13 +557,13 @@ Math.Sin();
                     d = ((float)pictureShow.Height / ThevePictureProcess.Height);
                     a = e.X / c;
                     b = e.Y / d;
-                    if (ThevePictureProcess.isAntiColor)
+                    if (ThevePictureProcess.antiColorFlag)
                     {
-                        labelPixelInfo.Text = string.Format("像素信息：PicPro.img[{1}][{0}]={2}", (int)a, (int)b, 255 - bm.GetPixel((int)a, (int)b).R);
+                        label1.Text = string.Format("像素信息：PicPro.img[{1}][{0}]={2}", (int)a, (int)b, 255 - bm.GetPixel((int)a, (int)b).R);
                     }
                     else
                     {
-                        labelPixelInfo.Text = string.Format("像素信息：PicPro.img[{1}][{0}]={2}", (int)a, (int)b, bm.GetPixel((int)a, (int)b).R);
+                        label1.Text = string.Format("像素信息：PicPro.img[{1}][{0}]={2}", (int)a, (int)b, bm.GetPixel((int)a, (int)b).R);
                     }
                 }
             }
@@ -569,7 +571,23 @@ Math.Sin();
             {
             }
         }
-
+        private void buttonUniqueTool_Click(object sender, EventArgs e)
+        {
+            if (Unique == false)
+            {
+                Unique = true;
+                buttonUnique.Text = "关闭独立程序栏(&U)";
+                t = new Toolss(richTextBoxPicPro.Text, 黑色ToolStripMenuItem.Checked);
+                t.Show();
+            }
+            else
+            {
+                Unique = false;
+                buttonUnique.Text = "开启独立程序栏(&U)";
+                richTextBoxPicPro.Text = t.synStr;
+                t.Dispose();
+            }
+        }
         //动态获取文件数
         private void textBoxDirectionBmp_TextChanged(object sender, EventArgs e)
         {
@@ -581,97 +599,11 @@ Math.Sin();
             }
             else
             {
-                labelPicAllCnt.Text = "图片总数：0";
+                labelPicAllNum.Text = "图片总数：0";
             }
-        }
-
-        //Debug
-        public void DebugLog(string str, bool isDebugMode = true)
-        {
-            if (isDebugMode == true)
-            {
-                if (str != "" && groupBox3.Visible == true)
-                {
-                    textBoxDebug.AppendText(str + "\r\n");
-                }
-            }
-        }
-
-
-        //同步程序
-        private void buttonSyncCode_Click(object sender, EventArgs e)
-        {
-            //恢复代码
-            if (File.Exists(@"PicProCode.c"))
-            {
-                richTextBoxPicPro.Text = File.ReadAllText(@"PicProCode.c");
-            }
-        }
-        //保存当前图像
-        private void buttonSaveBmp_Click(object sender, EventArgs e)
-        {
-            if (pictureShow.Image != null)
-            {
-                DebugLog("已保存至：" + ThevePictureReceive.BmpSave(@"BmpSave/img", ThevePictureReceive.PicCount++));
-            }
-        }
-        //清除图片和信息
-        private void buttonClearBmp_Click(object sender, EventArgs e)
-        {
-            pictureShow.Image = null;
-            if (stopwatchTime.IsRunning)
-            {
-                stopwatchTime.Reset();
-            }
-            cntRecvAllPic = 0;
-            cntRecvFailPic = 0;
-            rateError = 0;
-            rateFrame = 0;
-            timeSumFrame = 0;
-            timeOneFrame = 0;
-            timeWifiRun = 0;
-        }
-
-        // 显示DataGridView序号
-        private void dataGridView1_RowPostPaint(object sender, DataGridViewRowPostPaintEventArgs e)
-        {
-            DataGridView dgv = sender as DataGridView;
-            Rectangle rectangle = new Rectangle(e.RowBounds.Location.X, e.RowBounds.Location.Y, dgv.RowHeadersWidth - 4, e.RowBounds.Height);
-            TextRenderer.DrawText(e.Graphics, e.RowIndex.ToString(), dgv.RowHeadersDefaultCellStyle.Font, rectangle, dgv.RowHeadersDefaultCellStyle.ForeColor, TextFormatFlags.VerticalCenter | TextFormatFlags.HorizontalCenter);
         }
         #endregion
-        #region 菜单栏  
-        int IndexTabControlLast = 0;
-        //任务栏页面更改时
-        private void tabControl2_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            switch (IndexTabControlLast)
-            {
-                case 0:
-                    DisadbleLocalForm();
-                    break;
-                case 1:
-                    DisadbleUartForm();
-                    break;
-                case 2:
-                    DisadbleWifiForm();
-                    break;
-                default:
-                    break;
-            }
-            IndexTabControlLast = tabControlMode.SelectedIndex;
-            switch (tabControlMode.SelectedIndex)
-            {
-                case 1:
-                    TheveSerialPort.Scan(comboBoxCom);
-                    break;
-                case 2:
-                    TheveWifi.IpScan(comboBoxIP);
-                    break;
-                default:
-                    break;
-            }
-        }
+        #region 菜单栏 
         //隐藏Debug 
         private void 隐藏相关信息栏ToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -681,13 +613,11 @@ Math.Sin();
             if (隐藏相关信息栏ToolStripMenuItem.Checked)
             {
                 groupBox2.Height = tabControl1.Height;
-                groupBoxInfo.Height = groupBox2.Height;
                 groupBox3.Visible = false;
             }
             else
             {
                 groupBox2.Height = groupBox3.Location.Y - groupBox2.Location.Y - 10;
-                groupBoxInfo.Height = groupBox2.Height;
                 groupBox3.Visible = true;
             }
             switch (tabControlMode.SelectedIndex)
@@ -724,6 +654,7 @@ Math.Sin();
             textBoxDirectionBmp.Text = e.ClickedItem.Text;
         }
         //窗体黑色主题
+
         void MainThemeChange()
         {
             ChangeColor(this);
@@ -770,12 +701,12 @@ Math.Sin();
             switch (e.ClickedItem.ToString())
             {
                 case "拉伸模式":
-                    pictureShow.Dock = DockStyle.Fill;
+                    pictureShow.Height = groupBox2.Height - 50;
+                    pictureShow.Width = groupBox2.Width;
                     break;
 
                 case "等宽长缩放":
-                    pictureShow.Dock = DockStyle.None;
-                    ThevePictureProcess.AdaptSize(pictureShow, groupBox2.Width - 6, groupBox2.Height - 24);
+                    ThevePictureProcess.AdaptSize(pictureShow, groupBox2.Width, groupBox2.Height - 50);
                     break;
 
                 default:
@@ -798,11 +729,11 @@ Math.Sin();
             switch (e.ClickedItem.ToString())
             {
                 case "单函数模式":
-                    ThevePictureProcess.isMultiFuncMode = false;
+                    ThevePictureProcess.modeFlag = false;
                     break;
 
                 case "多函数模式":
-                    ThevePictureProcess.isMultiFuncMode = true;
+                    ThevePictureProcess.modeFlag = true;
                     break;
 
                 default:
@@ -854,37 +785,19 @@ Math.Sin();
                     break;
             }
         }
-        //窗口大小改变时
-        private void SmartCarMain_SizeChanged(object sender, EventArgs e)
+
+        private void 赞赏ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (拉伸模式ToolStripMenuItem.Checked)
-            {
-                pictureShow.Height = groupBox2.Height;
-                pictureShow.Width = groupBox2.Width;
-            }
-            else
-            {
-                ThevePictureProcess.AdaptSize(pictureShow, groupBox2.Width, groupBox2.Height);
-            }
-        }
-        //关闭软件
-        private void SmartCarMain_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            if (thrRecv != null && thrRecv.IsAlive)
-            {
-                thrRecv.Abort();
-                UdpStopReceive();
-            }
+            Form f = new Form();
+            f.Icon = Resources.car;
+            f.StartPosition = FormStartPosition.CenterScreen;
+            f.Size = new Size(1000, 1000);
+            f.BackgroundImage = Resources.赞赏码;
+            f.BackgroundImageLayout = ImageLayout.Stretch;
+            f.Show();
         }
         #endregion
-        #region 串口图传
-
-        int PictureReceiveCount = 0;
-        //接收数据字节
-        int CntUartRecvBytes = 0;
-        //开始接收标志
-        bool IsUartRecvStart = false;
-
+        #region 串口接收图像
         //打开串口
         private void buttonSerialOpen_Click(object sender, EventArgs e)
         {
@@ -902,16 +815,9 @@ Math.Sin();
                             if (serialPort1.IsOpen == true)
                             {
                                 buttonSerialOpen.Text = "关闭(&O)";
-
                                 comboBoxCom.Enabled = false;
                                 comboBoxBaud.Enabled = false;
-                                buttonUartLock.Enabled = true;
-
-                                if (thrCheck == null)
-                                {
-                                    thrCheck = new Thread(UartCheck);
-                                    thrCheck.Start();
-                                }
+                                buttonLockInfo.Enabled = true;
                                 break;
                             }
                         }
@@ -926,15 +832,11 @@ Math.Sin();
                                 buttonSerialOpen.Text = "打开(&O)";
                                 comboBoxCom.Enabled = true;
                                 comboBoxBaud.Enabled = true;
-                                buttonUartLock.Enabled = false;
-                                if (buttonUartLock.Text == "解锁(&D)")
+                                if (buttonLockInfo.Text == "解锁(&D)")
                                 {
-                                    buttonUartLock_Click(null, null);
+                                    buttonLockInfo_Click(null, null);
                                 }
-                                if (thrCheck != null)
-                                {
-                                    thrCheck.Abort();
-                                }
+
                                 break;
                             }
                         }
@@ -942,15 +844,68 @@ Math.Sin();
                 }
 
             }
-            catch (Exception ex)
+            catch
             {
-                MessageBox.Show(ex.Message);
+                DebugLog("串口开关出错。");
+            }
+        }
+        Stopwatch stopwatch;
+        //接收
+        private void serialPort1_DataReceived(object sender, SerialDataReceivedEventArgs e)
+        {
+            if (serialPort1.BytesToRead > 0 && StartReceiveFlag == true)
+            {
+                if (stopwatch == null)//计时系统
+                {
+                    stopwatch = new Stopwatch();
+                    stopwatch.Start();
+                }
+                int recvCount = serialPort1.BytesToRead;
+                byte[] buff = new byte[recvCount];
+                if (serialPort1.Read(buff, 0, recvCount) > 0)
+                {
+                    for (int i = 0; i < recvCount; i++)
+                    {
+                        listRecvPicData.Add(buff[i]);
+                        ReceiveDataCount++;
+                    }
+                }
+            }
+            else
+            {
+                serialPort1.DiscardInBuffer();
+            }
+        }
+        //开始接收图像
+        private void buttonStartReceive_Click(object sender, EventArgs e)
+        {
+            if (StartReceiveFlag == false)//停止
+            {
+                buttonStartReceive.Text = "停止接收图像(&G)";
+                DebugLog("开始接收图像");
+                timer2.Start();
+            }
+            else
+            {
+                buttonStartReceive.Text = "开始接收图像(&G)";
+                DebugLog("停止接收图像");
+                listRecvPicData.Clear();
+            }
+            StartReceiveFlag = !StartReceiveFlag;
+        }
+        //保存当前图像
+        private void buttonSaveBmp_Click(object sender, EventArgs e)
+        {
+            if (pictureShow.Image != null)
+            {
+                DebugLog("已保存至：" + ThevePictureReceive.BmpSave(@"BmpSave/img", ThevePictureReceive.PicCount++));
+
             }
         }
         //锁定
-        private void buttonUartLock_Click(object sender, EventArgs e)
+        private void buttonLockInfo_Click(object sender, EventArgs e)
         {
-            if (buttonUartLock.Text == "锁定(&D)")
+            if (ThevePictureProcess.CodeLock == false)
             {
                 if (textBoxPicHeight.Text == "" || textBoxPicWidth.Text == "")
                 {
@@ -958,121 +913,90 @@ Math.Sin();
                 }
                 else
                 {
-                    try
-                    {
-                        ThevePictureReceive.CreatBmpSize(Convert.ToInt32(textBoxPicWidth.Text), Convert.ToInt32(textBoxPicHeight.Text));
-                        ButtonUartEnable(true);
-                        //保存信息
-                        if (comboBoxCom.Text != "")
-                        {
-                            TheveIniFiles.IniWriteValue("串口传图", "串口号", comboBoxCom.SelectedItem.ToString());
-                            TheveIniFiles.IniWriteValue("串口传图", "波特率", comboBoxBaud.Text);
-                        }
-                        TheveIniFiles.IniWriteValue("串口传图", "图像宽", textBoxPicWidth.Text);
-                        TheveIniFiles.IniWriteValue("串口传图", "图像高", textBoxPicHeight.Text);
-                        buttonUartLock.Text = "解锁(&D)";
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show(ex.Message);
-                    }
+                    ThevePictureReceive.Width = Convert.ToInt32(textBoxPicWidth.Text);
+                    ThevePictureReceive.Height = Convert.ToInt32(textBoxPicHeight.Text);
+                    ThevePictureReceive.Size = ThevePictureReceive.Width * ThevePictureReceive.Height;
 
+                    buttonLockInfo.Text = "解锁(&D)";
+                    ButtonEnable(true);
+                    ThevePictureProcess.CodeLock = true;
+
+                    TheveIniFiles.IniWriteValue("串口传图", "串口号", comboBoxCom.SelectedItem.ToString());
+                    TheveIniFiles.IniWriteValue("串口传图", "波特率", comboBoxBaud.Text);
+                    TheveIniFiles.IniWriteValue("串口传图", "图像宽", textBoxPicWidth.Text);
+                    TheveIniFiles.IniWriteValue("串口传图", "图像高", textBoxPicHeight.Text);
                 }
-
             }
             else
             {
-                ThevePictureProcess.isCompiledCode = false;
-                PicPro.ClearInherit();
-                ButtonUartEnable(false);
-                //解锁时关闭接收图像功能
-                if (buttonUartRecvStart.Text == "停止接收图像(&G)")
+                buttonLockInfo.Text = "锁定(&D)";
+                ThevePictureProcess.RunCodeFlag = false;
+                ButtonEnable(false);
+                ThevePictureProcess.CodeLock = false;
+                if (Unique == true)
                 {
-                    IsUartRecvStart = false;
-                    buttonUartRecvStart.Text = "开始接收图像(&G)";
+                    richTextBoxPicPro.Text = t.synStr;
+                }
+                if (buttonStartReceive.Text == "停止接收图像(&G)")
+                {
+                    StartReceiveFlag = false;
+                    buttonStartReceive.Text = "开始接收图像(&G)";
                     DebugLog("停止接收图像\r\n");
                 }
-                buttonUartLock.Text = "锁定(&D)";
             }
 
         }
-        //开始接收图像
-        private void buttonStartReceive_Click(object sender, EventArgs e)
+        //任务栏页面更改时
+        private void tabControl2_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (buttonUartRecvStart.Text == "开始接收图像(&G)")
+            ButtonEnable(false);
+
+            switch (tabControlMode.SelectedIndex)
             {
-                IsUartRecvStart = true;
-                DebugLog("开始接收图像");
-                timerUartCheck.Start();
-                buttonUartRecvStart.Text = "停止接收图像(&G)";
-            }
-            else
-            {
-                IsUartRecvStart = false;
-                listRecvPicData.Clear();
-                DebugLog("停止接收图像");
-            }
-        }
-        //按钮使能
-        private void ButtonUartEnable(bool state)
-        {
-            //锁定后 不能改  
-            textBoxPicHeight.Enabled = !state;
-            textBoxPicWidth.Enabled = !state;
-            //锁定后 才能改 true 
-            buttonUartRecvStart.Enabled = state;
-            buttonClearBmp.Enabled = state;
-            buttonUartSaveBmp.Enabled = state;
-            buttonUartRunCode.Enabled = state;
-            listRecvPicData.Clear();
-            RichTextReadState(state);
-        }
-        //接收中断
-        private void serialPort1_DataReceived(object sender, SerialDataReceivedEventArgs e)
-        {
-            try
-            {
-                if (serialPort1.BytesToRead > 0 && IsUartRecvStart == true)
-                {
-                    //计时系统
-                    if (IsRecvFrame)
+                case 0:
+                    labelByte.Visible = false;
+
+                    if (buttonLockInfo.Text != "锁定(&D)")
                     {
-                        TimerEnd(stopwatchSum, "帧间隔用时：", ref timeSumFrame);
+                        buttonLockInfo_Click(null, null);
                     }
-                    TimerStart(stopwatchSum);
-                    TimerStart(stopwatch);
-                    TimerStart(stopwatchTime);
-                    //接收数据
-                    int CntRecvBytes = serialPort1.BytesToRead;
-                    byte[] buff = new byte[CntRecvBytes];
-                    CntRecvBytes = serialPort1.Read(buff, 0, CntRecvBytes);
-                    if (CntRecvBytes > 0)
+
+                    if (buttonSerialOpen.Text != "打开(&O)")
                     {
-                        for (int i = 0; i < CntRecvBytes; i++)
-                        {
-                            listRecvPicData.Add(buff[i]);
-                        }
-                        CntUartRecvBytes += CntRecvBytes;
+                        buttonSerialOpen_Click(null, null);
                     }
-                }
-                else//杂乱数据
-                {
-                    serialPort1.DiscardInBuffer();
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
+
+                    break;
+                case 1:
+
+                    TheveSerialPort.Scan(comboBoxCom);
+                    labelByte.Visible = true;
+                    if (buttonSerialOpen.Text == "打开(&O)")
+                    {
+                        buttonLockInfo.Enabled = false;
+                    }
+                    if (ThevePictureProcess.CodeLock == true)
+                    {
+                        buttonCodeLock_Click(null, null);
+                    }
+                    break;
+                default:
+                    break;
             }
         }
-        //定时器处理函数
-        private void timerUartCheck_Tick(object sender, EventArgs e)
+        //清除图片
+        private void buttonClearBmp_Click(object sender, EventArgs e)
         {
-            //CheckImage();
-            //labelRecvByte.Text = "传输字节量：" + listRecvPicData.Count.ToString();
+            pictureShow.Image = null;
+        }
+        //定时器处理
+        private void timer2_Tick(object sender, EventArgs e)
+        {
+            CheckImage();
+            labelByte.Text = "传输字节量：" + listRecvPicData.Count.ToString();
         }
         //检查是否满足图像条件
-        private void CheckImage()
+        void CheckImage()
         {
             int index = 0;
             while (index <= listRecvPicData.Count - ThevePictureReceive.Size - 4)
@@ -1085,15 +1009,14 @@ Math.Sin();
                         {
                             for (int j = 0; j < ThevePictureReceive.Width; j++)
                             {
-                                PicPro.img[i, j] = listRecvPicData[index + 2 + j + i * ThevePictureReceive.Width];
+                                PicPro.img[i, j] = listRecvPicData[index + j + i * ThevePictureReceive.Width];
                                 PicPro.imgOriginal[i, j] = PicPro.img[i, j];
                             }
                         }
                         listRecvPicData.RemoveRange(0, index + ThevePictureReceive.Size + 3);
                         pictureShow.Image = ThevePictureReceive.ShowBMP();
                         PictureReceiveCount++;
-                        labelPicIndex.Text = "当前图片编号：" + PictureReceiveCount.ToString();
-
+                        labelPicNumShow.Text = "当前图片编号：" + PictureReceiveCount.ToString();
                         //计时
                         stopwatch.Stop();
                         TimeSpan dt = stopwatch.Elapsed;
@@ -1113,12 +1036,12 @@ Math.Sin();
                             }
                             else
                             {
-                                if (buttonUartRecvStart.Text == "停止接收图像(&G)")
+                                if (buttonStartReceive.Text == "停止接收图像(&G)")
                                 {
-                                    buttonUartRecvStart.Text = "开始接收图像(&G)";
+                                    buttonStartReceive.Text = "开始接收图像(&G)";
                                     DebugLog("停止接收图像");
                                     listRecvPicData.Clear();
-                                    IsUartRecvStart = false;
+                                    StartReceiveFlag = false;
                                 }
                                 MessageBox.Show(ThevePictureProcess.Log, "程序错误");
                             }
@@ -1135,99 +1058,6 @@ Math.Sin();
                 index++;
             }
         }
-        void UartCheck()
-        {
-            DebugLog("[检查线程开始]", IsDebugMode);
-            while (IsUdpcRecvStart)
-            {
-                while (IsWifiRecvStop)
-                {
-                    timeWifiRun = stopwatchTime.Elapsed.TotalSeconds;
-                    labelWifiTime.Text = "图传启动时间：" + timeWifiRun.ToString("#0.0 s");
-                    rateFrame = timeWifiRun == 0 ? 0 : cntRecvAllPic / timeWifiRun;
-                    labelRecvFrameRate.Text = "平均帧率：" + rateFrame.ToString("#0.0");
-                }
-                //显示数据
-                rateError = cntRecvAllPic == 0 ? 0 : (float)cntRecvFailPic / cntRecvAllPic * 100;
-                timeWifiRun = stopwatchTime.Elapsed.TotalSeconds;
-                rateFrame = timeWifiRun == 0 ? 0 : cntRecvAllPic / timeWifiRun;
-                labelRecvErrRate.Text = "错误率：" + rateError.ToString("#0.000%");
-                labelRecvByte.Text = "接收字节数：" + listRecvPicData.Count;
-                labelRecvCnt.Text = "接收图片数：" + cntRecvAllPic;
-                labelRecvOneFrameTime.Text = "平均单帧接收时间：" + (cntRecvAllPic == 0 ? 0 : (timeOneFrame / cntRecvAllPic)).ToString("#0.000 000 s");
-                labelRecvSumFrameTime.Text = "平均接收时间：" + (cntRecvAllPic == 0 ? 0 : (timeSumFrame / cntRecvAllPic)).ToString("#0.000 s");
-                labelRecvFrameRate.Text = "平均帧率：" + rateFrame.ToString("#0.0 fps");
-                labelRecvFrameRateEff.Text = "平均有效帧率：" + (timeSumFrame == 0 ? 0 : (cntRecvAllPic / timeSumFrame)).ToString("#0.0 fps");
-                labelWifiTime.Text = "图传启动时间：" + timeWifiRun.ToString("#0.0 s");
-                //查找协议
-                int index = 0;
-                while (index <= listRecvPicData.Count - ThevePictureReceive.Size - 4)
-                {
-                    if (listRecvPicData[index] == 0xFC && listRecvPicData[index + 1] == 0xCF)
-                    {
-                        cntRecvAllPic++;
-                        if (listRecvPicData[index + ThevePictureReceive.Size + 2] == 0xCF && listRecvPicData[index + ThevePictureReceive.Size + 3] == 0xFC)
-                        {
-                            for (int i = 0; i < ThevePictureReceive.Height; i++)
-                            {
-                                for (int j = 0; j < ThevePictureReceive.Width; j++)
-                                {
-                                    PicPro.img[i, j] = listRecvPicData[index + 2 + j + i * ThevePictureReceive.Width];
-                                    PicPro.imgOriginal[i, j] = PicPro.img[i, j];
-                                }
-                            }
-                            //帧间隔 计时处理
-                            IsRecvFrame = true;
-                            TimerEnd(stopwatch, "此帧用时：", ref timeOneFrame);
-                            try
-                            {
-                                listRecvPicData.RemoveRange(0, index + ThevePictureReceive.Size + 4);
-                                pictureShow.Image = ThevePictureReceive.ShowBMP();
-                            }
-                            catch { }
-                            //自动保存
-                            if (checkBoxWifiAutoSave.Checked == true)
-                            {
-                                DebugLog("已保存至：" + ThevePictureReceive.BmpSave(@"BmpAutoSave\img", ThevePictureReceive.PicAutoCount++));
-                            }
-                            //自动运行程序
-                            if (checkBoxWifiRunCode.Checked == true)
-                            {
-                                if (ThevePictureProcess.RunCode(richTextBoxPicPro.Text))
-                                {
-                                    DebugLog("接收图像序号" + cntRecvAllPic.ToString() + ThevePictureProcess.Log);
-                                }
-                                else//编译错误
-                                {
-                                    if (buttonUartRecvStart.Text == "停止接收图像(&G)")
-                                    {
-                                        buttonUartRecvStart.Text = "开始接收图像(&G)";
-                                        DebugLog("停止接收图像");
-                                        listRecvPicData.Clear();
-                                        IsUartRecvStart = false;
-                                    }
-                                    MessageBox.Show(ThevePictureProcess.Log, "程序错误");
-                                }
-                                pictureShow.Image = ThevePictureReceive.ShowBMP();
-                                //参数监视器
-                                WatchShow();
-                                //数组查看器
-                                WatchArrayShow();
-                            }
-                        }
-                        else
-                        {
-                            cntRecvFailPic++;
-                            listRecvPicData.RemoveRange(0, index + ThevePictureReceive.Size + 4);
-                            DebugLog("此帧图像数据错乱,已丢弃。");
-                        }
-                    }
-                    index++;
-                }
-            }
-            DebugLog("[检查线程关闭]", IsDebugMode);
-        }
-
         //接收图像运行程序
         private void buttonCodeRun2_Click(object sender, EventArgs e)
         {
@@ -1239,415 +1069,27 @@ Math.Sin();
                 }
             }
 
-            if (CompileRunCode())
+            if (ThevePictureProcess.RunCode(richTextBoxPicPro.Text))
             {
                 DebugLog("接收图像序号" + PictureReceiveCount.ToString() + ThevePictureProcess.Log);
             }
             else
             {
-                if (buttonUartLock.Text != "锁定(&D)")
+                if (buttonStartReceive.Text == "停止接收图像(&G)")
                 {
-                    buttonUartLock_Click(null, null);
-                }
-            }
-            pictureShow.Image = ThevePictureReceive.ShowBMP();
-            //参数监视器
-            WatchShow();
-            //数组查看器
-            WatchArrayShow();
-        }
-        //关闭串口所有功能
-        private void DisadbleUartForm()
-        {
-            if (buttonSerialOpen.Text != "打开(&O)")
-            {
-                buttonSerialOpen_Click(null, null);
-            }
-
-
-        }
-
-
-        #endregion
-        #region WiFi图传 
-
-        //开关：在连接UDP报文阶段为true，否则为false 
-        bool IsUdpcRecvStart = false;//开始接受
-        bool IsRecvFrame = false;//接收到了一帧
-        bool IsWifiRecvStop = true;//停止接收
-        //UDP对象
-        UdpClient udpcRecv;//UDP客户端
-        IPEndPoint localIpep;
-        //线程：连接UDP报文 检查传输协议
-        Thread thrRecv;//接收数据线程
-        Thread thrCheck;//检查协议线程
-
-        //计时器
-        Stopwatch stopwatch = new Stopwatch();
-        Stopwatch stopwatchSum = new Stopwatch();
-        Stopwatch stopwatchTime = new Stopwatch();
-        double timeOneFrame = 0;//接收一帧的时间
-        double timeSumFrame = 0;//帧间隔时间
-        double timeWifiRun = 0;//接收字节时运行时间
-        //参数
-        double rateFrame = 0;//帧率
-        double rateError = 0;//错误率
-        //计数器
-        int cntRecvAllPic = 0;//接收的图片总数
-        int cntRecvFailPic = 0;//接收失败的图片
-
-
-        //连接
-        private void buttonWifiLink_Click(object sender, EventArgs e)
-        {
-            if (buttonWifiLink.Text == "连接(&L)")
-            {
-                if (comboBoxIP.Text != null && textBoxPort.Text != null)
-                {
-                    if (UdpStartReceive(comboBoxIP.Text, textBoxPort.Text))
-                    {
-                        comboBoxIP.Enabled = false;
-                        textBoxPort.Enabled = false;
-                        buttonWifiLock.Enabled = true;
-                        buttonWifiLink.Text = "断开(&L)";
-                    }
-                }
-            }
-            else
-            {
-                comboBoxIP.Enabled = true;
-                textBoxPort.Enabled = true;
-                buttonWifiLock.Enabled = false;
-                UdpStopReceive();
-                buttonWifiLink.Text = "连接(&L)";
-                if (buttonWifiLock.Text == "解锁(&D)")
-                {
-                    buttonWifiLock_Click(null, null);
-                }
-            }
-        }
-        //锁定
-        private void buttonWifiLock_Click(object sender, EventArgs e)
-        {
-            if (buttonWifiLock.Text == "锁定(&D)")
-            {
-                if (textBoxWifiHeight.Text == "" || textBoxWifiWidth.Text == "")
-                {
-                    MessageBox.Show("请先填写接收图像的宽度和高度");
-                }
-                else
-                {
-                    try
-                    {
-                        ThevePictureReceive.CreatBmpSize(Convert.ToInt32(textBoxWifiWidth.Text), Convert.ToInt32(textBoxWifiHeight.Text));
-                        PicPro.CreatImg(ThevePictureReceive.Height, ThevePictureReceive.Width);
-                        ButtonWifiEnable(true);
-                        buttonWifiLock.Text = "解锁(&D)";
-                        //保存信息 
-                        TheveIniFiles.IniWriteValue("WIFI传图", "端口号", textBoxPort.Text);
-                        TheveIniFiles.IniWriteValue("WIFI传图", "图像宽", textBoxWifiWidth.Text);
-                        TheveIniFiles.IniWriteValue("WIFI传图", "图像高", textBoxWifiHeight.Text);
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show(ex.Message, "错误");
-                    }
-                }
-            }
-            else
-            {
-                ThevePictureProcess.isCompiledCode = false;
-                PicPro.ClearInherit();
-                ButtonWifiEnable(false);
-                if (buttonWifiRecvStart.Text != "开始接收图像(&G)")
-                {
-                    buttonWifiRecvStart_Click(null, null);
-                }
-                buttonWifiLock.Text = "锁定(&D)";
-            }
-        }
-        //开始/暂停接收图像
-        private void buttonWifiRecvStart_Click(object sender, EventArgs e)
-        {
-            if (buttonWifiRecvStart.Text == "开始接收图像(&G)")
-            {
-                IsWifiRecvStop = false;
-                buttonWifiRecvStart.Text = "暂停接收图像(&G)";
-            }
-            else
-            {
-                IsWifiRecvStop = true;
-                buttonWifiRecvStart.Text = "开始接收图像(&G)";
-            }
-        }
-
-        //运行程序
-        private void buttonWifiRun_Click(object sender, EventArgs e)
-        {
-            for (int i = 0; i < ThevePictureReceive.Height; i++)
-            {
-                for (int j = 0; j < ThevePictureReceive.Width; j++)
-                {
-                    PicPro.img[i, j] = PicPro.imgOriginal[i, j];
-                }
-            }
-
-            if (CompileRunCode())
-            {
-                DebugLog("接收图像序号" + cntRecvAllPic.ToString() + ThevePictureProcess.Log);
-            }
-            else
-            {
-                if (buttonWifiRecvStart.Text == "停止接收图像(&G)")
-                {
-                    buttonWifiRecvStart.Text = "开始接收图像(&G)";
+                    buttonStartReceive.Text = "开始接收图像(&G)";
                     DebugLog("停止接收图像");
                     listRecvPicData.Clear();
-                    IsWifiRecvStop = true;
+                    StartReceiveFlag = false;
                 }
+                MessageBox.Show(ThevePictureProcess.Log, "程序错误");
             }
             pictureShow.Image = ThevePictureReceive.ShowBMP();
-            //参数监视器
-            WatchShow();
-            //数组查看器
-            WatchArrayShow();
         }
-        //按钮使能
-        private void ButtonWifiEnable(bool state)
+        //转换
+        private void buttonTrans_Click(object sender, EventArgs e)
         {
-            //锁定后 不能改   
-            textBoxWifiHeight.Enabled = !state;
-            textBoxWifiWidth.Enabled = !state;
-            //锁定后 才能改 true  
-            buttonWifiRecvStart.Enabled = state;
-            buttonWifiClear.Enabled = state;
-            buttonWifiSaveBmp.Enabled = state;
-            buttonWifiRunCode.Enabled = state;
-            listRecvPicData.Clear();
-            RichTextReadState(state);
         }
-        // 开始接收UDP信息 
-        public bool UdpStartReceive(string userIPadress, string userPort)
-        {
-            try
-            {
-                if (!IsUdpcRecvStart) // 未连接的情况，开始连接
-                {
-                    localIpep = new IPEndPoint(IPAddress.Parse(userIPadress), Convert.ToInt32(userPort)); // 本机IP和连接端口号
-                    udpcRecv = new UdpClient(localIpep);
-                    thrRecv = new Thread(UdpReceiveInfo);
-                    thrRecv.Start();
-                    thrCheck = new Thread(UdpCheckInfo);
-                    thrCheck.Start();
-                    IsUdpcRecvStart = true;
-                    DebugLog("WiFi数据接收器启动成功");
-                    return true;
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "错误");
-            }
-            return false;
-        }
-
-        // 关闭UDP
-        public void UdpStopReceive()
-        {
-            if (IsUdpcRecvStart)
-            {
-                thrRecv.Abort();
-                udpcRecv.Close();
-                thrCheck.Abort();
-                IsUdpcRecvStart = false;
-                DebugLog("WiFi数据接收器关闭成功。");
-            }
-        }
-
-        // 接收数据
-        private void UdpReceiveInfo(object obj)
-        {
-            DebugLog("[接收线程开始]", IsDebugMode);
-            while (IsUdpcRecvStart)
-            {
-                while (IsWifiRecvStop) ;
-                //阻塞接收数据
-                byte[] bytRecv = udpcRecv.Receive(ref localIpep);
-                if (IsWifiRecvStop) continue;
-                //计时系统
-                if (IsRecvFrame)
-                {
-                    TimerEnd(stopwatchSum, "帧间隔用时：", ref timeSumFrame);
-                }
-                TimerStart(stopwatchSum);
-                TimerStart(stopwatch);
-                TimerStart(stopwatchTime);
-                //加入数据
-                for (int i = 0; i < bytRecv.Length; i++)
-                {
-                    listRecvPicData.Add(bytRecv[i]);
-                }
-            }
-            DebugLog("[接收线程开始]", IsDebugMode);
-        }
-        //检查数据
-        private void UdpCheckInfo(object obj)
-        {
-            DebugLog("[检查线程开始]", IsDebugMode);
-            while (IsUdpcRecvStart)
-            {
-                while (IsWifiRecvStop)
-                {
-                    timeWifiRun = stopwatchTime.Elapsed.TotalSeconds;
-                    labelWifiTime.Text = "图传启动时间：" + timeWifiRun.ToString("#0.0 s");
-                    rateFrame = timeWifiRun == 0 ? 0 : cntRecvAllPic / timeWifiRun;
-                    labelRecvFrameRate.Text = "平均帧率：" + rateFrame.ToString("#0.0 fps");
-                }
-                try
-                {
-
-                    //显示数据
-                    rateError = cntRecvAllPic == 0 ? 0 : (float)cntRecvFailPic / cntRecvAllPic * 100;
-                    timeWifiRun = stopwatchTime.Elapsed.TotalSeconds;
-                    rateFrame = timeWifiRun == 0 ? 0 : cntRecvAllPic / timeWifiRun;
-                    labelRecvErrRate.Text = "错误率：" + rateError.ToString("#0.000%");
-                    labelRecvByte.Text = "接收字节数：" + listRecvPicData.Count;
-                    labelRecvCnt.Text = "接收图片数：" + cntRecvAllPic;
-                    labelRecvOneFrameTime.Text = "平均单帧接收时间：" + (cntRecvAllPic == 0 ? 0 : (timeOneFrame / cntRecvAllPic)).ToString("#0.000 000 s");
-                    labelRecvSumFrameTime.Text = "平均接收时间：" + (cntRecvAllPic == 0 ? 0 : (timeSumFrame / cntRecvAllPic)).ToString("#0.000 s");
-                    labelRecvFrameRate.Text = "平均帧率：" + rateFrame.ToString("#0.0 fps");
-                    labelRecvFrameRateEff.Text = "平均有效帧率：" + (timeSumFrame == 0 ? 0 : (cntRecvAllPic / timeSumFrame)).ToString("#0.0 fps");
-                    labelWifiTime.Text = "图传启动时间：" + timeWifiRun.ToString("#0.0 s");
-                }
-                catch
-                {
-                }
-                //查找协议
-                int index = 0;
-                while (index <= listRecvPicData.Count - ThevePictureReceive.Size - 4)
-                {
-                    if (listRecvPicData[index] == 0xFC && listRecvPicData[index + 1] == 0xCF)
-                    {
-                        cntRecvAllPic++;
-                        if (listRecvPicData[index + ThevePictureReceive.Size + 2] == 0xCF && listRecvPicData[index + ThevePictureReceive.Size + 3] == 0xFC)
-                        {
-                            for (int i = 0; i < ThevePictureReceive.Height; i++)
-                            {
-                                for (int j = 0; j < ThevePictureReceive.Width; j++)
-                                {
-                                    PicPro.img[i, j] = listRecvPicData[index + 2 + j + i * ThevePictureReceive.Width];
-                                    PicPro.imgOriginal[i, j] = PicPro.img[i, j];
-                                }
-                            }
-                            //帧间隔 计时处理
-                            IsRecvFrame = true;
-                            TimerEnd(stopwatch, "此帧用时：", ref timeOneFrame);
-                            try
-                            {
-                                listRecvPicData.RemoveRange(0, index + ThevePictureReceive.Size + 4);
-                                pictureShow.Image = ThevePictureReceive.ShowBMP();
-                            }
-                            catch { }
-                            //自动保存
-                            if (checkBoxWifiAutoSave.Checked == true)
-                            {
-                                DebugLog("已保存至：" + ThevePictureReceive.BmpSave(@"BmpAutoSave\img", ThevePictureReceive.PicAutoCount++));
-                            }
-                            //自动运行程序
-                            if (checkBoxWifiRunCode.Checked == true)
-                            {
-                                if (ThevePictureProcess.RunCode(richTextBoxPicPro.Text))
-                                {
-                                    DebugLog("接收图像序号" + cntRecvAllPic.ToString() + ThevePictureProcess.Log);
-                                }
-                                else//编译错误
-                                {
-                                    if (buttonWifiRecvStart.Text == "停止接收图像(&G)")
-                                    {
-                                        buttonWifiRecvStart.Text = "开始接收图像(&G)";
-                                        DebugLog("停止接收图像");
-                                        listRecvPicData.Clear();
-                                        IsWifiRecvStop = true;
-                                    }
-                                    MessageBox.Show(ThevePictureProcess.Log, "程序错误");
-                                }
-                                pictureShow.Image = ThevePictureReceive.ShowBMP();
-                                //参数监视器
-                                WatchShow();
-                                //数组查看器
-                                WatchArrayShow();
-                            }
-                        }
-                        else
-                        {
-                            cntRecvFailPic++;
-                            listRecvPicData.RemoveRange(0, index + ThevePictureReceive.Size + 4);
-                            DebugLog("此帧图像数据错乱,已丢弃。");
-                        }
-                    }
-                    index++;
-                }
-            }
-            DebugLog("[检查线程关闭]", IsDebugMode);
-        }
-        //开始计时
-        void TimerStart(Stopwatch stopwatch)
-        {
-            if (!stopwatch.IsRunning)//计时系统
-            {
-                stopwatch.Restart();
-            }
-        }
-        //结束计时
-        void TimerEnd(Stopwatch stopwatch, string txt, ref double timeCnt)
-        {
-            if (stopwatch.IsRunning)
-            {
-                stopwatch.Stop();
-                TimeSpan dt = stopwatch.Elapsed;
-                if (dt.TotalSeconds < 1)
-                {
-                    timeCnt += dt.TotalSeconds;
-                }
-                DebugLog(txt + dt.TotalSeconds.ToString("#0.000 s"));
-            }
-        }
-        //关闭计时
-        void TimerClose(Stopwatch stopwatch)
-        {
-            try
-            {
-                if (stopwatch.IsRunning)
-                {
-                    stopwatch.Stop();
-                }
-            }
-            catch { }
-        }
-        //关闭wifi所有功能
-        private void DisadbleWifiForm()
-        {
-            TimerClose(stopwatch);
-            TimerClose(stopwatchSum);
-            TimerClose(stopwatchTime);
-            UdpStopReceive();
-            if (buttonWifiLink.Text != "连接(&L)")
-            {
-                buttonWifiLink_Click(null, null);
-            }
-        }
-
-        private void 赞赏ToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Form f = new Form();
-            f.Icon = Resources.car;
-            f.StartPosition = FormStartPosition.CenterScreen;
-            f.Size = new Size(1000, 1000);
-            f.BackgroundImage = Resources.赞赏码;
-            f.BackgroundImageLayout = ImageLayout.Stretch;
-            f.Show();
-        }
-
         #endregion
 
 

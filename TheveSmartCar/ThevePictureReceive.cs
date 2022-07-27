@@ -14,25 +14,18 @@ namespace TheveSmartCar
     {
         private static int _Height = 120;
         private static int _Width = 188;
-        private static int _Size = 188 * 120;
+        private static int _Size = 188*120;
         private static int _picCount = 0;
         private static int _picAutoCount = 0;
         private static Bitmap bmpSave;
         public static bool GrayFlag = false;
-        public static int[,] img = new int[Height, Width];
+
+
         public static int Height { get => _Height; set => _Height = value; }
         public static int Width { get => _Width; set => _Width = value; }
         public static int PicCount { get => _picCount; set => _picCount = value; }
         public static int PicAutoCount { get => _picAutoCount; set => _picAutoCount = value; }
         public static int Size { get => _Size; set => _Size = value; }
-        public static void CreatBmpSize(int width, int height)
-        {
-            Width = width;
-            Height = height;
-            Size = Width * Height;
-            PicPro.CreatImg(height,width);
-        }
- 
 
         /// <summary>
         /// 显示出BMP图像
@@ -45,9 +38,10 @@ namespace TheveSmartCar
             for (int i = 0; i < Height; i++)
             {
                 for (int j = 0; j < Width; j++)
-                {
-                    int a = buffer[i * Width + j];
-                    bmp.SetPixel(j, i, Color.FromArgb(a, a, a));
+                { 
+                        int a = buffer[i * Width + j];
+                        bmp.SetPixel(j, i, Color.FromArgb(a, a, a));
+                  
                 }
             }
             bmpSave = bmp.Clone(new Rectangle(0, 0, Width, Height), PixelFormat.Format24bppRgb);
@@ -58,7 +52,7 @@ namespace TheveSmartCar
         /// </summary>
         /// <returns></returns> 
         public static Bitmap ShowBMP(bool hide = false)
-        { 
+        {
             Bitmap bmpShow = new Bitmap(Width, Height, PixelFormat.Format24bppRgb);
 
             for (int i = 0; i < bmpShow.Height; i++)
@@ -99,7 +93,7 @@ namespace TheveSmartCar
                         default:
                             if (hide == false)//隐藏原图，只有彩色
                             {
-                                if (ThevePictureProcess.isAntiColor == true)
+                                if (ThevePictureProcess.antiColorFlag == true)
                                 {
                                     if (a == 0)
                                     {
@@ -134,7 +128,7 @@ namespace TheveSmartCar
         /// </summary>
         /// <param name="path">字符型非路径，除去标号和后缀</param>
         /// <returns>保存的全路径</returns>
-        public static string BmpSave(string path, int cnt)
+        public static string BmpSave(string path,int cnt)
         {
             string allPath = path + cnt.ToString() + ".bmp";
             bmpSave.Save(allPath, ImageFormat.Bmp);

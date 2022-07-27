@@ -5,6 +5,7 @@ D:\Visual Studio\1-Project\6-成品项目源码\0-temp\TheveSmartCar4\obj\Debug\
 D:\Visual Studio\1-Project\6-成品项目源码\0-temp\TheveSmartCar4\obj\Debug\TheveSmartCar.csproj.SuggestedBindingRedirects.cache
 D:\Visual Studio\1-Project\6-成品项目源码\0-temp\TheveSmartCar4\obj\Debug\TheveSmartCar.SmartCarMain.resources
 D:\Visual Studio\1-Project\6-成品项目源码\0-temp\TheveSmartCar4\obj\Debug\TheveSmartCar.Properties.Resources.resources
+D:\Visual Studio\1-Project\6-成品项目源码\0-temp\TheveSmartCar4\obj\Debug\TheveSmartCar.Toolss.resources
 D:\Visual Studio\1-Project\6-成品项目源码\0-temp\TheveSmartCar4\obj\Debug\TheveSmartCar.csproj.GenerateResource.cache
 D:\Visual Studio\1-Project\6-成品项目源码\0-temp\TheveSmartCar4\obj\Debug\TheveSmartCar.csproj.CoreCompileInputs.cache
 D:\Visual Studio\1-Project\6-成品项目源码\0-temp\TheveSmartCar4\obj\Debug\TheveSmartCar.csproj.CopyComplete
