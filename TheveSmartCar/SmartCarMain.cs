@@ -171,6 +171,7 @@ namespace TheveSmartCar
                 TheveMenuStrip.DirectionRecent(ToolStripMenuItemFile, textBoxDirectionBmp.Text, true);
             }
         }
+
         //图像处理处理
         private void GetBmpInfo()
         {
