@@ -31,19 +31,18 @@ namespace TheveSmartCar
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SmartCarMain));
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.buttonUnique = new System.Windows.Forms.Button();
+            this.buttonSyncCode = new System.Windows.Forms.Button();
             this.buttonAntiColor = new System.Windows.Forms.Button();
-            this.labelState = new System.Windows.Forms.Label();
+            this.labelCompileState = new System.Windows.Forms.Label();
             this.labelDepth = new System.Windows.Forms.Label();
             this.labelResoultion = new System.Windows.Forms.Label();
-            this.buttonChange = new System.Windows.Forms.Button();
+            this.buttonDisplayChange = new System.Windows.Forms.Button();
             this.buttonIniRecover = new System.Windows.Forms.Button();
             this.buttonIniSave = new System.Windows.Forms.Button();
             this.buttonDirectionBmp = new System.Windows.Forms.Button();
             this.buttonCodeLock = new System.Windows.Forms.Button();
-            this.buttonLast = new System.Windows.Forms.Button();
-            this.buttonNext = new System.Windows.Forms.Button();
+            this.buttonLastPic = new System.Windows.Forms.Button();
+            this.buttonNextPic = new System.Windows.Forms.Button();
             this.comboBoxAutoInterval = new System.Windows.Forms.ComboBox();
             this.label13 = new System.Windows.Forms.Label();
             this.label14 = new System.Windows.Forms.Label();
@@ -55,22 +54,23 @@ namespace TheveSmartCar
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.tabPageHelp = new System.Windows.Forms.TabPage();
             this.textBoxHelp = new System.Windows.Forms.TextBox();
-            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.tabPageParamView = new System.Windows.Forms.TabPage();
             this.richTextBoxWatch = new System.Windows.Forms.RichTextBox();
-            this.tabPage0 = new System.Windows.Forms.TabPage();
+            this.tabPageCodeEditer = new System.Windows.Forms.TabPage();
             this.richTextBoxPicPro = new System.Windows.Forms.RichTextBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.tabPageArrayView = new System.Windows.Forms.TabPage();
+            this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.textBoxDebug = new System.Windows.Forms.TextBox();
-            this.labelPicNumShow = new System.Windows.Forms.Label();
-            this.labelOrinial = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
+            this.labelPicIndex = new System.Windows.Forms.Label();
+            this.labelPixelInfo = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.labelAntiColor = new System.Windows.Forms.Label();
             this.pictureShow = new System.Windows.Forms.PictureBox();
-            this.labelPicAllNum = new System.Windows.Forms.Label();
+            this.labelRecvByte = new System.Windows.Forms.Label();
+            this.labelPicAllCnt = new System.Windows.Forms.Label();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.ToolStripMenuItemFile = new System.Windows.Forms.ToolStripMenuItem();
             this.显示模式ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -83,94 +83,121 @@ namespace TheveSmartCar
             this.箭头ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.十字ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.圆圈ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.隐藏ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.主题ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.白色ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.黑色ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripMenuItemSetting = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItemIniRecover = new System.Windows.Forms.ToolStripMenuItem();
-            this.ToolStripMenuItemHideDebug = new System.Windows.Forms.ToolStripMenuItem();
+            this.隐藏相关信息栏ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.全屏启动ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.theve开源软件ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.buttonSplit = new System.Windows.Forms.Button();
+            this.tabControlMode = new System.Windows.Forms.TabControl();
+            this.tabPagelocal = new System.Windows.Forms.TabPage();
+            this.tabPageUart = new System.Windows.Forms.TabPage();
+            this.buttonUartRunCode = new System.Windows.Forms.Button();
+            this.buttonUartSaveBmp = new System.Windows.Forms.Button();
+            this.checkBoxRunCode = new System.Windows.Forms.CheckBox();
+            this.buttonUartSynCode = new System.Windows.Forms.Button();
+            this.checkBoxAutoSave = new System.Windows.Forms.CheckBox();
+            this.buttonUartLock = new System.Windows.Forms.Button();
+            this.textBoxPicHeight = new System.Windows.Forms.TextBox();
+            this.textBoxPicWidth = new System.Windows.Forms.TextBox();
+            this.label11 = new System.Windows.Forms.Label();
+            this.label9 = new System.Windows.Forms.Label();
+            this.buttonSaveBmp = new System.Windows.Forms.Button();
+            this.buttonClearBmp = new System.Windows.Forms.Button();
+            this.buttonUartRecvStart = new System.Windows.Forms.Button();
+            this.comboBoxCom = new System.Windows.Forms.ComboBox();
+            this.buttonSerialOpen = new System.Windows.Forms.Button();
+            this.comboBoxBaud = new System.Windows.Forms.ComboBox();
+            this.labelSerialPort = new System.Windows.Forms.Label();
+            this.labelBaud = new System.Windows.Forms.Label();
+            this.tabPageWifi = new System.Windows.Forms.TabPage();
+            this.textBoxPort = new System.Windows.Forms.TextBox();
+            this.buttonWifiRunCode = new System.Windows.Forms.Button();
+            this.buttonWifiSaveBmp = new System.Windows.Forms.Button();
+            this.checkBoxWifiRunCode = new System.Windows.Forms.CheckBox();
+            this.buttonWifiSynCode = new System.Windows.Forms.Button();
+            this.checkBoxWifiAutoSave = new System.Windows.Forms.CheckBox();
+            this.buttonWifiLock = new System.Windows.Forms.Button();
+            this.textBoxWifiHeight = new System.Windows.Forms.TextBox();
+            this.textBoxWifiWidth = new System.Windows.Forms.TextBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.buttonSaveCode = new System.Windows.Forms.Button();
+            this.buttonWifiClear = new System.Windows.Forms.Button();
+            this.buttonWifiRecvStart = new System.Windows.Forms.Button();
+            this.comboBoxIP = new System.Windows.Forms.ComboBox();
+            this.buttonWifiLink = new System.Windows.Forms.Button();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.serialPort1 = new System.IO.Ports.SerialPort(this.components);
+            this.timerUartCheck = new System.Windows.Forms.Timer(this.components);
+            this.groupBoxInfo = new System.Windows.Forms.GroupBox();
+            this.labelWifiTime = new System.Windows.Forms.Label();
+            this.labelRecvFrameRateEff = new System.Windows.Forms.Label();
+            this.labelRecvFrameRate = new System.Windows.Forms.Label();
+            this.labelRecvSumFrameTime = new System.Windows.Forms.Label();
+            this.labelRecvOneFrameTime = new System.Windows.Forms.Label();
+            this.labelRecvErrRate = new System.Windows.Forms.Label();
+            this.labelRecvCnt = new System.Windows.Forms.Label();
+            this.label01State = new System.Windows.Forms.Label();
+            this.labelPicMode = new System.Windows.Forms.Label();
+            this.panel1 = new System.Windows.Forms.Panel();
             this.赞赏ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.groupBox1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
-            this.tabPage2.SuspendLayout();
-            this.tabPage1.SuspendLayout();
-            this.tabPage0.SuspendLayout();
+            this.tabPageHelp.SuspendLayout();
+            this.tabPageParamView.SuspendLayout();
+            this.tabPageCodeEditer.SuspendLayout();
             this.tabControl1.SuspendLayout();
+            this.tabPageArrayView.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.groupBox3.SuspendLayout();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureShow)).BeginInit();
             this.menuStrip1.SuspendLayout();
+            this.tabControlMode.SuspendLayout();
+            this.tabPagelocal.SuspendLayout();
+            this.tabPageUart.SuspendLayout();
+            this.tabPageWifi.SuspendLayout();
+            this.groupBoxInfo.SuspendLayout();
             this.SuspendLayout();
             // 
-            // groupBox1
+            // buttonSyncCode
             // 
-            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox1.Controls.Add(this.buttonUnique);
-            this.groupBox1.Controls.Add(this.buttonAntiColor);
-            this.groupBox1.Controls.Add(this.labelState);
-            this.groupBox1.Controls.Add(this.labelDepth);
-            this.groupBox1.Controls.Add(this.labelResoultion);
-            this.groupBox1.Controls.Add(this.buttonChange);
-            this.groupBox1.Controls.Add(this.buttonIniRecover);
-            this.groupBox1.Controls.Add(this.buttonIniSave);
-            this.groupBox1.Controls.Add(this.buttonDirectionBmp);
-            this.groupBox1.Controls.Add(this.buttonCodeLock);
-            this.groupBox1.Controls.Add(this.buttonLast);
-            this.groupBox1.Controls.Add(this.buttonNext);
-            this.groupBox1.Controls.Add(this.comboBoxAutoInterval);
-            this.groupBox1.Controls.Add(this.label13);
-            this.groupBox1.Controls.Add(this.label14);
-            this.groupBox1.Controls.Add(this.buttonAutoInterval);
-            this.groupBox1.Controls.Add(this.textBoxDirectionBmp);
-            this.groupBox1.Controls.Add(this.label16);
-            this.groupBox1.Controls.Add(this.buttonJump);
-            this.groupBox1.Controls.Add(this.textBoxStartNum);
-            this.groupBox1.Location = new System.Drawing.Point(12, 42);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(1498, 148);
-            this.groupBox1.TabIndex = 4;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "控制";
-            // 
-            // buttonUnique
-            // 
-            this.buttonUnique.Location = new System.Drawing.Point(691, 90);
-            this.buttonUnique.Name = "buttonUnique";
-            this.buttonUnique.Size = new System.Drawing.Size(112, 46);
-            this.buttonUnique.TabIndex = 9;
-            this.buttonUnique.Text = "独立程序栏(&U)";
-            this.buttonUnique.UseVisualStyleBackColor = true;
-            this.buttonUnique.Click += new System.EventHandler(this.buttonUniqueTool_Click);
-            this.buttonUnique.MouseEnter += new System.EventHandler(this.buttonUnique_MouseEnter);
+            this.buttonSyncCode.Location = new System.Drawing.Point(888, 71);
+            this.buttonSyncCode.Name = "buttonSyncCode";
+            this.buttonSyncCode.Size = new System.Drawing.Size(153, 42);
+            this.buttonSyncCode.TabIndex = 9;
+            this.buttonSyncCode.Text = "同步程序(&C)";
+            this.buttonSyncCode.UseVisualStyleBackColor = true;
+            this.buttonSyncCode.Click += new System.EventHandler(this.buttonSyncCode_Click);
             // 
             // buttonAntiColor
             // 
-            this.buttonAntiColor.Location = new System.Drawing.Point(691, 22);
+            this.buttonAntiColor.Enabled = false;
+            this.buttonAntiColor.Location = new System.Drawing.Point(530, 13);
             this.buttonAntiColor.Name = "buttonAntiColor";
-            this.buttonAntiColor.Size = new System.Drawing.Size(112, 46);
+            this.buttonAntiColor.Size = new System.Drawing.Size(153, 42);
             this.buttonAntiColor.TabIndex = 8;
             this.buttonAntiColor.Text = "黑白反色(&I)";
             this.buttonAntiColor.UseVisualStyleBackColor = true;
             this.buttonAntiColor.Click += new System.EventHandler(this.buttonAntiColor_Click);
             this.buttonAntiColor.MouseEnter += new System.EventHandler(this.buttonAntiColor_MouseEnter);
             // 
-            // labelState
+            // labelCompileState
             // 
-            this.labelState.AutoSize = true;
-            this.labelState.Location = new System.Drawing.Point(1139, 112);
-            this.labelState.Name = "labelState";
-            this.labelState.Size = new System.Drawing.Size(62, 18);
-            this.labelState.TabIndex = 64;
-            this.labelState.Text = "状态：";
+            this.labelCompileState.AutoSize = true;
+            this.labelCompileState.Location = new System.Drawing.Point(1261, 95);
+            this.labelCompileState.Name = "labelCompileState";
+            this.labelCompileState.Size = new System.Drawing.Size(62, 18);
+            this.labelCompileState.TabIndex = 64;
+            this.labelCompileState.Text = "状态：";
             // 
             // labelDepth
             // 
             this.labelDepth.AutoSize = true;
-            this.labelDepth.Location = new System.Drawing.Point(1139, 72);
+            this.labelDepth.Location = new System.Drawing.Point(1261, 55);
             this.labelDepth.Name = "labelDepth";
             this.labelDepth.Size = new System.Drawing.Size(80, 18);
             this.labelDepth.TabIndex = 61;
@@ -179,28 +206,29 @@ namespace TheveSmartCar
             // labelResoultion
             // 
             this.labelResoultion.AutoSize = true;
-            this.labelResoultion.Location = new System.Drawing.Point(1139, 34);
+            this.labelResoultion.Location = new System.Drawing.Point(1261, 17);
             this.labelResoultion.Name = "labelResoultion";
             this.labelResoultion.Size = new System.Drawing.Size(80, 18);
             this.labelResoultion.TabIndex = 60;
             this.labelResoultion.Text = "分辨率：";
             // 
-            // buttonChange
+            // buttonDisplayChange
             // 
-            this.buttonChange.Location = new System.Drawing.Point(983, 22);
-            this.buttonChange.Name = "buttonChange";
-            this.buttonChange.Size = new System.Drawing.Size(112, 46);
-            this.buttonChange.TabIndex = 12;
-            this.buttonChange.Text = "转换(&T)";
-            this.buttonChange.UseVisualStyleBackColor = true;
-            this.buttonChange.Click += new System.EventHandler(this.buttonChange_Click);
-            this.buttonChange.MouseEnter += new System.EventHandler(this.buttonChange_MouseEnter);
+            this.buttonDisplayChange.Enabled = false;
+            this.buttonDisplayChange.Location = new System.Drawing.Point(530, 71);
+            this.buttonDisplayChange.Name = "buttonDisplayChange";
+            this.buttonDisplayChange.Size = new System.Drawing.Size(153, 42);
+            this.buttonDisplayChange.TabIndex = 12;
+            this.buttonDisplayChange.Text = "显示转换(&T)";
+            this.buttonDisplayChange.UseVisualStyleBackColor = true;
+            this.buttonDisplayChange.Click += new System.EventHandler(this.buttonChange_Click);
+            this.buttonDisplayChange.MouseEnter += new System.EventHandler(this.buttonChange_MouseEnter);
             // 
             // buttonIniRecover
             // 
-            this.buttonIniRecover.Location = new System.Drawing.Point(545, 90);
+            this.buttonIniRecover.Location = new System.Drawing.Point(1067, 13);
             this.buttonIniRecover.Name = "buttonIniRecover";
-            this.buttonIniRecover.Size = new System.Drawing.Size(112, 46);
+            this.buttonIniRecover.Size = new System.Drawing.Size(153, 42);
             this.buttonIniRecover.TabIndex = 7;
             this.buttonIniRecover.Text = "恢复设置(&R)";
             this.buttonIniRecover.UseVisualStyleBackColor = true;
@@ -210,19 +238,19 @@ namespace TheveSmartCar
             // buttonIniSave
             // 
             this.buttonIniSave.FlatAppearance.BorderSize = 0;
-            this.buttonIniSave.Location = new System.Drawing.Point(545, 22);
+            this.buttonIniSave.Location = new System.Drawing.Point(888, 13);
             this.buttonIniSave.Margin = new System.Windows.Forms.Padding(0);
             this.buttonIniSave.Name = "buttonIniSave";
-            this.buttonIniSave.Size = new System.Drawing.Size(112, 46);
+            this.buttonIniSave.Size = new System.Drawing.Size(153, 42);
             this.buttonIniSave.TabIndex = 6;
-            this.buttonIniSave.Text = "保存设置(&S)";
+            this.buttonIniSave.Text = "保存程序(&S)";
             this.buttonIniSave.UseVisualStyleBackColor = true;
             this.buttonIniSave.Click += new System.EventHandler(this.buttonIniSave_Click);
             this.buttonIniSave.MouseEnter += new System.EventHandler(this.buttonIniSave_MouseEnter);
             // 
             // buttonDirectionBmp
             // 
-            this.buttonDirectionBmp.Location = new System.Drawing.Point(20, 98);
+            this.buttonDirectionBmp.Location = new System.Drawing.Point(11, 79);
             this.buttonDirectionBmp.Name = "buttonDirectionBmp";
             this.buttonDirectionBmp.Size = new System.Drawing.Size(178, 38);
             this.buttonDirectionBmp.TabIndex = 1;
@@ -234,41 +262,43 @@ namespace TheveSmartCar
             // buttonCodeLock
             // 
             this.buttonCodeLock.Enabled = false;
-            this.buttonCodeLock.Location = new System.Drawing.Point(983, 90);
+            this.buttonCodeLock.Location = new System.Drawing.Point(1067, 71);
             this.buttonCodeLock.Name = "buttonCodeLock";
-            this.buttonCodeLock.Size = new System.Drawing.Size(112, 46);
+            this.buttonCodeLock.Size = new System.Drawing.Size(153, 42);
             this.buttonCodeLock.TabIndex = 13;
             this.buttonCodeLock.Text = "锁定(&D)";
             this.buttonCodeLock.UseVisualStyleBackColor = true;
             this.buttonCodeLock.Click += new System.EventHandler(this.buttonCodeLock_Click);
             this.buttonCodeLock.MouseEnter += new System.EventHandler(this.buttonCodeLock_MouseEnter);
             // 
-            // buttonLast
+            // buttonLastPic
             // 
-            this.buttonLast.FlatAppearance.BorderSize = 0;
-            this.buttonLast.Location = new System.Drawing.Point(837, 22);
-            this.buttonLast.Name = "buttonLast";
-            this.buttonLast.Size = new System.Drawing.Size(112, 46);
-            this.buttonLast.TabIndex = 10;
-            this.buttonLast.Text = "上一张(&L)";
-            this.buttonLast.UseVisualStyleBackColor = true;
-            this.buttonLast.Click += new System.EventHandler(this.buttonLast_Click);
+            this.buttonLastPic.Enabled = false;
+            this.buttonLastPic.FlatAppearance.BorderSize = 0;
+            this.buttonLastPic.Location = new System.Drawing.Point(709, 13);
+            this.buttonLastPic.Name = "buttonLastPic";
+            this.buttonLastPic.Size = new System.Drawing.Size(153, 42);
+            this.buttonLastPic.TabIndex = 10;
+            this.buttonLastPic.Text = "上一张(&L)";
+            this.buttonLastPic.UseVisualStyleBackColor = true;
+            this.buttonLastPic.Click += new System.EventHandler(this.buttonLast_Click);
             // 
-            // buttonNext
+            // buttonNextPic
             // 
-            this.buttonNext.Location = new System.Drawing.Point(837, 90);
-            this.buttonNext.Name = "buttonNext";
-            this.buttonNext.Size = new System.Drawing.Size(112, 46);
-            this.buttonNext.TabIndex = 11;
-            this.buttonNext.Text = "下一张(&N)";
-            this.buttonNext.UseVisualStyleBackColor = true;
-            this.buttonNext.Click += new System.EventHandler(this.buttonNext_Click);
+            this.buttonNextPic.Enabled = false;
+            this.buttonNextPic.Location = new System.Drawing.Point(709, 71);
+            this.buttonNextPic.Name = "buttonNextPic";
+            this.buttonNextPic.Size = new System.Drawing.Size(153, 42);
+            this.buttonNextPic.TabIndex = 11;
+            this.buttonNextPic.Text = "下一张(&N)";
+            this.buttonNextPic.UseVisualStyleBackColor = true;
+            this.buttonNextPic.Click += new System.EventHandler(this.buttonNext_Click);
             // 
             // comboBoxAutoInterval
             // 
             this.comboBoxAutoInterval.BackColor = System.Drawing.SystemColors.Window;
             this.comboBoxAutoInterval.FormattingEnabled = true;
-            this.comboBoxAutoInterval.Location = new System.Drawing.Point(389, 57);
+            this.comboBoxAutoInterval.Location = new System.Drawing.Point(380, 40);
             this.comboBoxAutoInterval.Name = "comboBoxAutoInterval";
             this.comboBoxAutoInterval.Size = new System.Drawing.Size(106, 26);
             this.comboBoxAutoInterval.TabIndex = 4;
@@ -277,7 +307,7 @@ namespace TheveSmartCar
             // label13
             // 
             this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(402, 24);
+            this.label13.Location = new System.Drawing.Point(393, 11);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(80, 18);
             this.label13.TabIndex = 48;
@@ -286,7 +316,7 @@ namespace TheveSmartCar
             // label14
             // 
             this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(259, 24);
+            this.label14.Location = new System.Drawing.Point(250, 11);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(62, 18);
             this.label14.TabIndex = 47;
@@ -294,7 +324,7 @@ namespace TheveSmartCar
             // 
             // buttonAutoInterval
             // 
-            this.buttonAutoInterval.Location = new System.Drawing.Point(389, 98);
+            this.buttonAutoInterval.Location = new System.Drawing.Point(380, 79);
             this.buttonAutoInterval.Name = "buttonAutoInterval";
             this.buttonAutoInterval.Size = new System.Drawing.Size(106, 38);
             this.buttonAutoInterval.TabIndex = 5;
@@ -305,7 +335,7 @@ namespace TheveSmartCar
             // 
             // textBoxDirectionBmp
             // 
-            this.textBoxDirectionBmp.Location = new System.Drawing.Point(20, 56);
+            this.textBoxDirectionBmp.Location = new System.Drawing.Point(11, 39);
             this.textBoxDirectionBmp.Name = "textBoxDirectionBmp";
             this.textBoxDirectionBmp.Size = new System.Drawing.Size(178, 28);
             this.textBoxDirectionBmp.TabIndex = 0;
@@ -314,7 +344,7 @@ namespace TheveSmartCar
             // label16
             // 
             this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(40, 24);
+            this.label16.Location = new System.Drawing.Point(31, 11);
             this.label16.Name = "label16";
             this.label16.Size = new System.Drawing.Size(134, 18);
             this.label16.TabIndex = 32;
@@ -322,7 +352,7 @@ namespace TheveSmartCar
             // 
             // buttonJump
             // 
-            this.buttonJump.Location = new System.Drawing.Point(241, 98);
+            this.buttonJump.Location = new System.Drawing.Point(232, 79);
             this.buttonJump.Name = "buttonJump";
             this.buttonJump.Size = new System.Drawing.Size(106, 38);
             this.buttonJump.TabIndex = 3;
@@ -333,7 +363,7 @@ namespace TheveSmartCar
             // 
             // textBoxStartNum
             // 
-            this.textBoxStartNum.Location = new System.Drawing.Point(241, 56);
+            this.textBoxStartNum.Location = new System.Drawing.Point(232, 39);
             this.textBoxStartNum.Name = "textBoxStartNum";
             this.textBoxStartNum.Size = new System.Drawing.Size(106, 28);
             this.textBoxStartNum.TabIndex = 2;
@@ -345,10 +375,10 @@ namespace TheveSmartCar
             this.statusStrip1.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabel1});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 1068);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 1097);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Padding = new System.Windows.Forms.Padding(2, 0, 14, 0);
-            this.statusStrip1.Size = new System.Drawing.Size(1531, 31);
+            this.statusStrip1.Size = new System.Drawing.Size(1626, 31);
             this.statusStrip1.TabIndex = 55;
             this.statusStrip1.Text = "statusStrip1";
             // 
@@ -362,16 +392,16 @@ namespace TheveSmartCar
             // 
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
-            // tabPage2
+            // tabPageHelp
             // 
-            this.tabPage2.Controls.Add(this.textBoxHelp);
-            this.tabPage2.Location = new System.Drawing.Point(4, 30);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(459, 821);
-            this.tabPage2.TabIndex = 2;
-            this.tabPage2.Text = "帮助说明";
-            this.tabPage2.UseVisualStyleBackColor = true;
+            this.tabPageHelp.Controls.Add(this.textBoxHelp);
+            this.tabPageHelp.Location = new System.Drawing.Point(4, 30);
+            this.tabPageHelp.Name = "tabPageHelp";
+            this.tabPageHelp.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageHelp.Size = new System.Drawing.Size(459, 850);
+            this.tabPageHelp.TabIndex = 2;
+            this.tabPageHelp.Text = "帮助说明";
+            this.tabPageHelp.UseVisualStyleBackColor = true;
             // 
             // textBoxHelp
             // 
@@ -383,19 +413,19 @@ namespace TheveSmartCar
             this.textBoxHelp.Name = "textBoxHelp";
             this.textBoxHelp.ReadOnly = true;
             this.textBoxHelp.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBoxHelp.Size = new System.Drawing.Size(453, 815);
+            this.textBoxHelp.Size = new System.Drawing.Size(453, 844);
             this.textBoxHelp.TabIndex = 0;
             // 
-            // tabPage1
+            // tabPageParamView
             // 
-            this.tabPage1.Controls.Add(this.richTextBoxWatch);
-            this.tabPage1.Location = new System.Drawing.Point(4, 30);
-            this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(459, 821);
-            this.tabPage1.TabIndex = 1;
-            this.tabPage1.Text = "参数监视器";
-            this.tabPage1.UseVisualStyleBackColor = true;
+            this.tabPageParamView.Controls.Add(this.richTextBoxWatch);
+            this.tabPageParamView.Location = new System.Drawing.Point(4, 30);
+            this.tabPageParamView.Name = "tabPageParamView";
+            this.tabPageParamView.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageParamView.Size = new System.Drawing.Size(459, 850);
+            this.tabPageParamView.TabIndex = 1;
+            this.tabPageParamView.Text = "参数监视器";
+            this.tabPageParamView.UseVisualStyleBackColor = true;
             // 
             // richTextBoxWatch
             // 
@@ -405,23 +435,23 @@ namespace TheveSmartCar
             this.richTextBoxWatch.Location = new System.Drawing.Point(3, 3);
             this.richTextBoxWatch.Name = "richTextBoxWatch";
             this.richTextBoxWatch.ReadOnly = true;
-            this.richTextBoxWatch.Size = new System.Drawing.Size(453, 815);
+            this.richTextBoxWatch.Size = new System.Drawing.Size(453, 844);
             this.richTextBoxWatch.TabIndex = 47;
             this.richTextBoxWatch.TabStop = false;
             this.richTextBoxWatch.Text = "";
             this.richTextBoxWatch.WordWrap = false;
             // 
-            // tabPage0
+            // tabPageCodeEditer
             // 
-            this.tabPage0.Controls.Add(this.richTextBoxPicPro);
-            this.tabPage0.Location = new System.Drawing.Point(4, 30);
-            this.tabPage0.Margin = new System.Windows.Forms.Padding(0);
-            this.tabPage0.Name = "tabPage0";
-            this.tabPage0.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage0.Size = new System.Drawing.Size(459, 821);
-            this.tabPage0.TabIndex = 0;
-            this.tabPage0.Text = "图像处理程序";
-            this.tabPage0.UseVisualStyleBackColor = true;
+            this.tabPageCodeEditer.Controls.Add(this.richTextBoxPicPro);
+            this.tabPageCodeEditer.Location = new System.Drawing.Point(4, 30);
+            this.tabPageCodeEditer.Margin = new System.Windows.Forms.Padding(0);
+            this.tabPageCodeEditer.Name = "tabPageCodeEditer";
+            this.tabPageCodeEditer.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageCodeEditer.Size = new System.Drawing.Size(459, 850);
+            this.tabPageCodeEditer.TabIndex = 0;
+            this.tabPageCodeEditer.Text = "图像处理程序";
+            this.tabPageCodeEditer.UseVisualStyleBackColor = true;
             // 
             // richTextBoxPicPro
             // 
@@ -430,7 +460,7 @@ namespace TheveSmartCar
             this.richTextBoxPicPro.Font = new System.Drawing.Font("Consolas", 7F);
             this.richTextBoxPicPro.Location = new System.Drawing.Point(3, 3);
             this.richTextBoxPicPro.Name = "richTextBoxPicPro";
-            this.richTextBoxPicPro.Size = new System.Drawing.Size(453, 815);
+            this.richTextBoxPicPro.Size = new System.Drawing.Size(453, 844);
             this.richTextBoxPicPro.TabIndex = 46;
             this.richTextBoxPicPro.TabStop = false;
             this.richTextBoxPicPro.Text = "";
@@ -440,28 +470,54 @@ namespace TheveSmartCar
             // 
             this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.tabControl1.Controls.Add(this.tabPage0);
-            this.tabControl1.Controls.Add(this.tabPage1);
-            this.tabControl1.Controls.Add(this.tabPage2);
+            this.tabControl1.Controls.Add(this.tabPageCodeEditer);
+            this.tabControl1.Controls.Add(this.tabPageParamView);
+            this.tabControl1.Controls.Add(this.tabPageArrayView);
+            this.tabControl1.Controls.Add(this.tabPageHelp);
             this.tabControl1.Font = new System.Drawing.Font("宋体", 10F);
-            this.tabControl1.Location = new System.Drawing.Point(1052, 196);
+            this.tabControl1.Location = new System.Drawing.Point(1147, 196);
             this.tabControl1.Margin = new System.Windows.Forms.Padding(0);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(467, 855);
-            this.tabControl1.TabIndex = 3;
+            this.tabControl1.Size = new System.Drawing.Size(467, 884);
+            this.tabControl1.TabIndex = 1;
+            // 
+            // tabPageArrayView
+            // 
+            this.tabPageArrayView.Controls.Add(this.dataGridView1);
+            this.tabPageArrayView.Location = new System.Drawing.Point(4, 30);
+            this.tabPageArrayView.Name = "tabPageArrayView";
+            this.tabPageArrayView.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageArrayView.Size = new System.Drawing.Size(459, 850);
+            this.tabPageArrayView.TabIndex = 3;
+            this.tabPageArrayView.Text = "数组查看器";
+            this.tabPageArrayView.UseVisualStyleBackColor = true;
+            // 
+            // dataGridView1
+            // 
+            this.dataGridView1.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.dataGridView1.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
+            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dataGridView1.Location = new System.Drawing.Point(3, 3);
+            this.dataGridView1.Name = "dataGridView1";
+            this.dataGridView1.RowHeadersWidth = 62;
+            this.dataGridView1.RowTemplate.Height = 30;
+            this.dataGridView1.Size = new System.Drawing.Size(453, 844);
+            this.dataGridView1.TabIndex = 2;
+            this.dataGridView1.RowPostPaint += new System.Windows.Forms.DataGridViewRowPostPaintEventHandler(this.dataGridView1_RowPostPaint);
             // 
             // groupBox3
             // 
             this.groupBox3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox3.Controls.Add(this.textBoxDebug);
-            this.groupBox3.Location = new System.Drawing.Point(12, 863);
+            this.groupBox3.Location = new System.Drawing.Point(12, 892);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(1024, 188);
+            this.groupBox3.Size = new System.Drawing.Size(1119, 188);
             this.groupBox3.TabIndex = 54;
             this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "相关信息";
+            this.groupBox3.Text = "输出栏";
             // 
             // textBoxDebug
             // 
@@ -474,87 +530,69 @@ namespace TheveSmartCar
             this.textBoxDebug.Name = "textBoxDebug";
             this.textBoxDebug.ReadOnly = true;
             this.textBoxDebug.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBoxDebug.Size = new System.Drawing.Size(1018, 161);
+            this.textBoxDebug.Size = new System.Drawing.Size(1113, 161);
             this.textBoxDebug.TabIndex = 18;
             // 
-            // labelPicNumShow
+            // labelPicIndex
             // 
-            this.labelPicNumShow.AutoSize = true;
-            this.labelPicNumShow.Location = new System.Drawing.Point(235, 24);
-            this.labelPicNumShow.Name = "labelPicNumShow";
-            this.labelPicNumShow.Size = new System.Drawing.Size(134, 18);
-            this.labelPicNumShow.TabIndex = 39;
-            this.labelPicNumShow.Text = "当前图片编号：";
+            this.labelPicIndex.AutoSize = true;
+            this.labelPicIndex.Location = new System.Drawing.Point(13, 100);
+            this.labelPicIndex.Name = "labelPicIndex";
+            this.labelPicIndex.Size = new System.Drawing.Size(143, 18);
+            this.labelPicIndex.TabIndex = 39;
+            this.labelPicIndex.Text = "当前图片编号：0";
             // 
-            // labelOrinial
+            // labelPixelInfo
             // 
-            this.labelOrinial.AutoSize = true;
-            this.labelOrinial.Location = new System.Drawing.Point(850, 24);
-            this.labelOrinial.Name = "labelOrinial";
-            this.labelOrinial.Size = new System.Drawing.Size(44, 18);
-            this.labelOrinial.TabIndex = 40;
-            this.labelOrinial.Text = "原图";
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(504, 24);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(98, 18);
-            this.label1.TabIndex = 57;
-            this.label1.Text = "像素信息：";
+            this.labelPixelInfo.AutoSize = true;
+            this.labelPixelInfo.Location = new System.Drawing.Point(13, 150);
+            this.labelPixelInfo.Name = "labelPixelInfo";
+            this.labelPixelInfo.Size = new System.Drawing.Size(296, 18);
+            this.labelPixelInfo.TabIndex = 57;
+            this.labelPixelInfo.Text = "单点像素信息：PicPro.img[0][0]=0";
             // 
             // groupBox2
             // 
             this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox2.Controls.Add(this.labelAntiColor);
-            this.groupBox2.Controls.Add(this.label1);
-            this.groupBox2.Controls.Add(this.labelOrinial);
             this.groupBox2.Controls.Add(this.pictureShow);
-            this.groupBox2.Controls.Add(this.labelPicNumShow);
-            this.groupBox2.Controls.Add(this.labelPicAllNum);
-            this.groupBox2.Location = new System.Drawing.Point(12, 196);
+            this.groupBox2.Location = new System.Drawing.Point(363, 196);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(1024, 657);
+            this.groupBox2.Size = new System.Drawing.Size(768, 686);
             this.groupBox2.TabIndex = 52;
             this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "图像及状态";
-            // 
-            // labelAntiColor
-            // 
-            this.labelAntiColor.AutoSize = true;
-            this.labelAntiColor.Location = new System.Drawing.Point(904, 24);
-            this.labelAntiColor.Name = "labelAntiColor";
-            this.labelAntiColor.Size = new System.Drawing.Size(44, 18);
-            this.labelAntiColor.TabIndex = 58;
-            this.labelAntiColor.Text = "反色";
-            this.labelAntiColor.Visible = false;
+            this.groupBox2.Text = "图像显示栏";
             // 
             // pictureShow
             // 
-            this.pictureShow.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.pictureShow.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pictureShow.Location = new System.Drawing.Point(0, 50);
+            this.pictureShow.Location = new System.Drawing.Point(3, 24);
             this.pictureShow.Name = "pictureShow";
-            this.pictureShow.Size = new System.Drawing.Size(1024, 607);
+            this.pictureShow.Size = new System.Drawing.Size(762, 659);
             this.pictureShow.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureShow.TabIndex = 1;
             this.pictureShow.TabStop = false;
             this.pictureShow.Paint += new System.Windows.Forms.PaintEventHandler(this.pictureShow_Paint);
             this.pictureShow.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pictureShow_MouseMove);
             // 
-            // labelPicAllNum
+            // labelRecvByte
             // 
-            this.labelPicAllNum.AutoSize = true;
-            this.labelPicAllNum.Location = new System.Drawing.Point(17, 24);
-            this.labelPicAllNum.Name = "labelPicAllNum";
-            this.labelPicAllNum.Size = new System.Drawing.Size(98, 18);
-            this.labelPicAllNum.TabIndex = 33;
-            this.labelPicAllNum.Text = "图片总数：";
+            this.labelRecvByte.AutoSize = true;
+            this.labelRecvByte.Location = new System.Drawing.Point(13, 350);
+            this.labelRecvByte.Name = "labelRecvByte";
+            this.labelRecvByte.Size = new System.Drawing.Size(143, 18);
+            this.labelRecvByte.TabIndex = 59;
+            this.labelRecvByte.Text = "传输字节量：0 B";
+            // 
+            // labelPicAllCnt
+            // 
+            this.labelPicAllCnt.AutoSize = true;
+            this.labelPicAllCnt.Location = new System.Drawing.Point(13, 50);
+            this.labelPicAllCnt.Name = "labelPicAllCnt";
+            this.labelPicAllCnt.Size = new System.Drawing.Size(143, 18);
+            this.labelPicAllCnt.TabIndex = 33;
+            this.labelPicAllCnt.Text = "当前图像总数：0";
             // 
             // menuStrip1
             // 
@@ -571,7 +609,7 @@ namespace TheveSmartCar
             this.赞赏ToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1531, 32);
+            this.menuStrip1.Size = new System.Drawing.Size(1626, 32);
             this.menuStrip1.TabIndex = 56;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -635,8 +673,7 @@ namespace TheveSmartCar
             this.鼠标样式ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.箭头ToolStripMenuItem,
             this.十字ToolStripMenuItem,
-            this.圆圈ToolStripMenuItem,
-            this.隐藏ToolStripMenuItem});
+            this.圆圈ToolStripMenuItem});
             this.鼠标样式ToolStripMenuItem.Name = "鼠标样式ToolStripMenuItem";
             this.鼠标样式ToolStripMenuItem.Size = new System.Drawing.Size(98, 28);
             this.鼠标样式ToolStripMenuItem.Text = "鼠标样式";
@@ -661,12 +698,6 @@ namespace TheveSmartCar
             this.圆圈ToolStripMenuItem.Name = "圆圈ToolStripMenuItem";
             this.圆圈ToolStripMenuItem.Size = new System.Drawing.Size(146, 34);
             this.圆圈ToolStripMenuItem.Text = "圆圈";
-            // 
-            // 隐藏ToolStripMenuItem
-            // 
-            this.隐藏ToolStripMenuItem.Name = "隐藏ToolStripMenuItem";
-            this.隐藏ToolStripMenuItem.Size = new System.Drawing.Size(146, 34);
-            this.隐藏ToolStripMenuItem.Text = "隐藏";
             // 
             // 主题ToolStripMenuItem
             // 
@@ -695,27 +726,25 @@ namespace TheveSmartCar
             // ToolStripMenuItemSetting
             // 
             this.ToolStripMenuItemSetting.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItemIniRecover,
-            this.ToolStripMenuItemHideDebug});
+            this.隐藏相关信息栏ToolStripMenuItem,
+            this.全屏启动ToolStripMenuItem});
             this.ToolStripMenuItemSetting.Name = "ToolStripMenuItemSetting";
             this.ToolStripMenuItemSetting.Size = new System.Drawing.Size(62, 28);
             this.ToolStripMenuItemSetting.Text = "设置";
             // 
-            // toolStripMenuItemIniRecover
+            // 隐藏相关信息栏ToolStripMenuItem
             // 
-            this.toolStripMenuItemIniRecover.Checked = true;
-            this.toolStripMenuItemIniRecover.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.toolStripMenuItemIniRecover.Name = "toolStripMenuItemIniRecover";
-            this.toolStripMenuItemIniRecover.Size = new System.Drawing.Size(254, 34);
-            this.toolStripMenuItemIniRecover.Text = "以自定义设置启动";
-            this.toolStripMenuItemIniRecover.Click += new System.EventHandler(this.toolStripMenuItemIniRecover_Click);
+            this.隐藏相关信息栏ToolStripMenuItem.Name = "隐藏相关信息栏ToolStripMenuItem";
+            this.隐藏相关信息栏ToolStripMenuItem.Size = new System.Drawing.Size(236, 34);
+            this.隐藏相关信息栏ToolStripMenuItem.Text = "隐藏相关信息栏";
+            this.隐藏相关信息栏ToolStripMenuItem.Click += new System.EventHandler(this.隐藏相关信息栏ToolStripMenuItem_Click);
             // 
-            // ToolStripMenuItemHideDebug
+            // 全屏启动ToolStripMenuItem
             // 
-            this.ToolStripMenuItemHideDebug.Name = "ToolStripMenuItemHideDebug";
-            this.ToolStripMenuItemHideDebug.Size = new System.Drawing.Size(254, 34);
-            this.ToolStripMenuItemHideDebug.Text = "隐藏相关信息栏";
-            this.ToolStripMenuItemHideDebug.Click += new System.EventHandler(this.ToolStripMenuItemHideDebug_Click);
+            this.全屏启动ToolStripMenuItem.Name = "全屏启动ToolStripMenuItem";
+            this.全屏启动ToolStripMenuItem.Size = new System.Drawing.Size(236, 34);
+            this.全屏启动ToolStripMenuItem.Text = "全屏启动";
+            this.全屏启动ToolStripMenuItem.Click += new System.EventHandler(this.全屏启动ToolStripMenuItem_Click);
             // 
             // theve开源软件ToolStripMenuItem
             // 
@@ -730,14 +759,592 @@ namespace TheveSmartCar
             this.buttonSplit.Cursor = System.Windows.Forms.Cursors.SizeWE;
             this.buttonSplit.FlatAppearance.BorderSize = 0;
             this.buttonSplit.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonSplit.Location = new System.Drawing.Point(1039, 196);
+            this.buttonSplit.Location = new System.Drawing.Point(1134, 196);
             this.buttonSplit.Name = "buttonSplit";
-            this.buttonSplit.Size = new System.Drawing.Size(10, 852);
+            this.buttonSplit.Size = new System.Drawing.Size(10, 881);
             this.buttonSplit.TabIndex = 57;
             this.buttonSplit.Text = " ";
             this.buttonSplit.UseVisualStyleBackColor = true;
             this.buttonSplit.MouseDown += new System.Windows.Forms.MouseEventHandler(this.buttonSplit_MouseDown);
             this.buttonSplit.MouseMove += new System.Windows.Forms.MouseEventHandler(this.buttonSplit_MouseMove);
+            // 
+            // tabControlMode
+            // 
+            this.tabControlMode.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tabControlMode.Controls.Add(this.tabPagelocal);
+            this.tabControlMode.Controls.Add(this.tabPageUart);
+            this.tabControlMode.Controls.Add(this.tabPageWifi);
+            this.tabControlMode.Location = new System.Drawing.Point(12, 33);
+            this.tabControlMode.Name = "tabControlMode";
+            this.tabControlMode.SelectedIndex = 0;
+            this.tabControlMode.Size = new System.Drawing.Size(1598, 157);
+            this.tabControlMode.TabIndex = 58;
+            this.tabControlMode.SelectedIndexChanged += new System.EventHandler(this.tabControl2_SelectedIndexChanged);
+            // 
+            // tabPagelocal
+            // 
+            this.tabPagelocal.BackColor = System.Drawing.SystemColors.Control;
+            this.tabPagelocal.Controls.Add(this.buttonSyncCode);
+            this.tabPagelocal.Controls.Add(this.buttonDirectionBmp);
+            this.tabPagelocal.Controls.Add(this.buttonAntiColor);
+            this.tabPagelocal.Controls.Add(this.textBoxStartNum);
+            this.tabPagelocal.Controls.Add(this.labelCompileState);
+            this.tabPagelocal.Controls.Add(this.buttonJump);
+            this.tabPagelocal.Controls.Add(this.labelDepth);
+            this.tabPagelocal.Controls.Add(this.label16);
+            this.tabPagelocal.Controls.Add(this.labelResoultion);
+            this.tabPagelocal.Controls.Add(this.textBoxDirectionBmp);
+            this.tabPagelocal.Controls.Add(this.buttonDisplayChange);
+            this.tabPagelocal.Controls.Add(this.buttonAutoInterval);
+            this.tabPagelocal.Controls.Add(this.buttonIniRecover);
+            this.tabPagelocal.Controls.Add(this.label14);
+            this.tabPagelocal.Controls.Add(this.buttonIniSave);
+            this.tabPagelocal.Controls.Add(this.label13);
+            this.tabPagelocal.Controls.Add(this.comboBoxAutoInterval);
+            this.tabPagelocal.Controls.Add(this.buttonCodeLock);
+            this.tabPagelocal.Controls.Add(this.buttonNextPic);
+            this.tabPagelocal.Controls.Add(this.buttonLastPic);
+            this.tabPagelocal.Location = new System.Drawing.Point(4, 28);
+            this.tabPagelocal.Name = "tabPagelocal";
+            this.tabPagelocal.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPagelocal.Size = new System.Drawing.Size(1590, 125);
+            this.tabPagelocal.TabIndex = 0;
+            this.tabPagelocal.Text = "本地";
+            // 
+            // tabPageUart
+            // 
+            this.tabPageUart.BackColor = System.Drawing.SystemColors.Control;
+            this.tabPageUart.Controls.Add(this.buttonUartRunCode);
+            this.tabPageUart.Controls.Add(this.buttonUartSaveBmp);
+            this.tabPageUart.Controls.Add(this.checkBoxRunCode);
+            this.tabPageUart.Controls.Add(this.buttonUartSynCode);
+            this.tabPageUart.Controls.Add(this.checkBoxAutoSave);
+            this.tabPageUart.Controls.Add(this.buttonUartLock);
+            this.tabPageUart.Controls.Add(this.textBoxPicHeight);
+            this.tabPageUart.Controls.Add(this.textBoxPicWidth);
+            this.tabPageUart.Controls.Add(this.label11);
+            this.tabPageUart.Controls.Add(this.label9);
+            this.tabPageUart.Controls.Add(this.buttonSaveBmp);
+            this.tabPageUart.Controls.Add(this.buttonClearBmp);
+            this.tabPageUart.Controls.Add(this.buttonUartRecvStart);
+            this.tabPageUart.Controls.Add(this.comboBoxCom);
+            this.tabPageUart.Controls.Add(this.buttonSerialOpen);
+            this.tabPageUart.Controls.Add(this.comboBoxBaud);
+            this.tabPageUart.Controls.Add(this.labelSerialPort);
+            this.tabPageUart.Controls.Add(this.labelBaud);
+            this.tabPageUart.Location = new System.Drawing.Point(4, 28);
+            this.tabPageUart.Name = "tabPageUart";
+            this.tabPageUart.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageUart.Size = new System.Drawing.Size(1590, 125);
+            this.tabPageUart.TabIndex = 1;
+            this.tabPageUart.Text = "串口";
+            // 
+            // buttonUartRunCode
+            // 
+            this.buttonUartRunCode.Enabled = false;
+            this.buttonUartRunCode.Location = new System.Drawing.Point(1067, 71);
+            this.buttonUartRunCode.Name = "buttonUartRunCode";
+            this.buttonUartRunCode.Size = new System.Drawing.Size(153, 42);
+            this.buttonUartRunCode.TabIndex = 11;
+            this.buttonUartRunCode.Text = "运行程序(&N)";
+            this.buttonUartRunCode.UseVisualStyleBackColor = true;
+            this.buttonUartRunCode.Click += new System.EventHandler(this.buttonCodeRun2_Click);
+            // 
+            // buttonUartSaveBmp
+            // 
+            this.buttonUartSaveBmp.Enabled = false;
+            this.buttonUartSaveBmp.Location = new System.Drawing.Point(1067, 13);
+            this.buttonUartSaveBmp.Name = "buttonUartSaveBmp";
+            this.buttonUartSaveBmp.Size = new System.Drawing.Size(153, 42);
+            this.buttonUartSaveBmp.TabIndex = 10;
+            this.buttonUartSaveBmp.Text = "保存图像(&P)";
+            this.buttonUartSaveBmp.UseVisualStyleBackColor = true;
+            this.buttonUartSaveBmp.Click += new System.EventHandler(this.buttonSaveBmp_Click);
+            // 
+            // checkBoxRunCode
+            // 
+            this.checkBoxRunCode.AutoSize = true;
+            this.checkBoxRunCode.Location = new System.Drawing.Point(1275, 81);
+            this.checkBoxRunCode.Name = "checkBoxRunCode";
+            this.checkBoxRunCode.Size = new System.Drawing.Size(142, 22);
+            this.checkBoxRunCode.TabIndex = 13;
+            this.checkBoxRunCode.Text = "自动运行程序";
+            this.checkBoxRunCode.UseVisualStyleBackColor = true;
+            // 
+            // buttonUartSynCode
+            // 
+            this.buttonUartSynCode.FlatAppearance.BorderSize = 0;
+            this.buttonUartSynCode.Location = new System.Drawing.Point(888, 71);
+            this.buttonUartSynCode.Margin = new System.Windows.Forms.Padding(0);
+            this.buttonUartSynCode.Name = "buttonUartSynCode";
+            this.buttonUartSynCode.Size = new System.Drawing.Size(153, 42);
+            this.buttonUartSynCode.TabIndex = 9;
+            this.buttonUartSynCode.Text = "同步程序(&R)";
+            this.buttonUartSynCode.UseVisualStyleBackColor = true;
+            this.buttonUartSynCode.Click += new System.EventHandler(this.buttonSyncCode_Click);
+            // 
+            // checkBoxAutoSave
+            // 
+            this.checkBoxAutoSave.AutoSize = true;
+            this.checkBoxAutoSave.Location = new System.Drawing.Point(1275, 23);
+            this.checkBoxAutoSave.Name = "checkBoxAutoSave";
+            this.checkBoxAutoSave.Size = new System.Drawing.Size(142, 22);
+            this.checkBoxAutoSave.TabIndex = 12;
+            this.checkBoxAutoSave.Text = "自动保存图像";
+            this.checkBoxAutoSave.UseVisualStyleBackColor = true;
+            // 
+            // buttonUartLock
+            // 
+            this.buttonUartLock.Enabled = false;
+            this.buttonUartLock.Location = new System.Drawing.Point(530, 71);
+            this.buttonUartLock.Name = "buttonUartLock";
+            this.buttonUartLock.Size = new System.Drawing.Size(153, 42);
+            this.buttonUartLock.TabIndex = 5;
+            this.buttonUartLock.Text = "锁定(&D)";
+            this.buttonUartLock.UseVisualStyleBackColor = true;
+            this.buttonUartLock.Click += new System.EventHandler(this.buttonUartLock_Click);
+            // 
+            // textBoxPicHeight
+            // 
+            this.textBoxPicHeight.Location = new System.Drawing.Point(377, 74);
+            this.textBoxPicHeight.Name = "textBoxPicHeight";
+            this.textBoxPicHeight.Size = new System.Drawing.Size(103, 28);
+            this.textBoxPicHeight.TabIndex = 3;
+            // 
+            // textBoxPicWidth
+            // 
+            this.textBoxPicWidth.Location = new System.Drawing.Point(377, 19);
+            this.textBoxPicWidth.Name = "textBoxPicWidth";
+            this.textBoxPicWidth.Size = new System.Drawing.Size(103, 28);
+            this.textBoxPicWidth.TabIndex = 2;
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(295, 79);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(80, 18);
+            this.label11.TabIndex = 19;
+            this.label11.Text = "图像高：";
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(295, 24);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(80, 18);
+            this.label9.TabIndex = 18;
+            this.label9.Text = "图像宽：";
+            // 
+            // buttonSaveBmp
+            // 
+            this.buttonSaveBmp.Location = new System.Drawing.Point(888, 13);
+            this.buttonSaveBmp.Name = "buttonSaveBmp";
+            this.buttonSaveBmp.Size = new System.Drawing.Size(153, 42);
+            this.buttonSaveBmp.TabIndex = 8;
+            this.buttonSaveBmp.Text = "保存程序(&S)";
+            this.buttonSaveBmp.UseVisualStyleBackColor = true;
+            this.buttonSaveBmp.Click += new System.EventHandler(this.buttonIniSave_Click);
+            // 
+            // buttonClearBmp
+            // 
+            this.buttonClearBmp.Enabled = false;
+            this.buttonClearBmp.Location = new System.Drawing.Point(709, 71);
+            this.buttonClearBmp.Name = "buttonClearBmp";
+            this.buttonClearBmp.Size = new System.Drawing.Size(153, 42);
+            this.buttonClearBmp.TabIndex = 7;
+            this.buttonClearBmp.Text = "清除当前图像(&C)";
+            this.buttonClearBmp.UseVisualStyleBackColor = true;
+            this.buttonClearBmp.Click += new System.EventHandler(this.buttonClearBmp_Click);
+            // 
+            // buttonUartRecvStart
+            // 
+            this.buttonUartRecvStart.Enabled = false;
+            this.buttonUartRecvStart.Location = new System.Drawing.Point(709, 13);
+            this.buttonUartRecvStart.Name = "buttonUartRecvStart";
+            this.buttonUartRecvStart.Size = new System.Drawing.Size(153, 42);
+            this.buttonUartRecvStart.TabIndex = 6;
+            this.buttonUartRecvStart.Text = "开始接收图像(&G)";
+            this.buttonUartRecvStart.UseVisualStyleBackColor = true;
+            this.buttonUartRecvStart.Click += new System.EventHandler(this.buttonStartReceive_Click);
+            // 
+            // comboBoxCom
+            // 
+            this.comboBoxCom.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxCom.FormattingEnabled = true;
+            this.comboBoxCom.Location = new System.Drawing.Point(103, 20);
+            this.comboBoxCom.Name = "comboBoxCom";
+            this.comboBoxCom.Size = new System.Drawing.Size(147, 26);
+            this.comboBoxCom.TabIndex = 0;
+            // 
+            // buttonSerialOpen
+            // 
+            this.buttonSerialOpen.Enabled = false;
+            this.buttonSerialOpen.Location = new System.Drawing.Point(530, 13);
+            this.buttonSerialOpen.Name = "buttonSerialOpen";
+            this.buttonSerialOpen.Size = new System.Drawing.Size(153, 42);
+            this.buttonSerialOpen.TabIndex = 4;
+            this.buttonSerialOpen.Text = "打开(&O)";
+            this.buttonSerialOpen.UseVisualStyleBackColor = true;
+            this.buttonSerialOpen.Click += new System.EventHandler(this.buttonSerialOpen_Click);
+            // 
+            // comboBoxBaud
+            // 
+            this.comboBoxBaud.FormattingEnabled = true;
+            this.comboBoxBaud.Location = new System.Drawing.Point(103, 75);
+            this.comboBoxBaud.Name = "comboBoxBaud";
+            this.comboBoxBaud.Size = new System.Drawing.Size(147, 26);
+            this.comboBoxBaud.TabIndex = 1;
+            // 
+            // labelSerialPort
+            // 
+            this.labelSerialPort.AutoSize = true;
+            this.labelSerialPort.Location = new System.Drawing.Point(18, 24);
+            this.labelSerialPort.Name = "labelSerialPort";
+            this.labelSerialPort.Size = new System.Drawing.Size(80, 18);
+            this.labelSerialPort.TabIndex = 9;
+            this.labelSerialPort.Text = "串口号：";
+            // 
+            // labelBaud
+            // 
+            this.labelBaud.AutoSize = true;
+            this.labelBaud.Location = new System.Drawing.Point(18, 79);
+            this.labelBaud.Name = "labelBaud";
+            this.labelBaud.Size = new System.Drawing.Size(80, 18);
+            this.labelBaud.TabIndex = 10;
+            this.labelBaud.Text = "波特率：";
+            // 
+            // tabPageWifi
+            // 
+            this.tabPageWifi.BackColor = System.Drawing.SystemColors.Control;
+            this.tabPageWifi.Controls.Add(this.textBoxPort);
+            this.tabPageWifi.Controls.Add(this.buttonWifiRunCode);
+            this.tabPageWifi.Controls.Add(this.buttonWifiSaveBmp);
+            this.tabPageWifi.Controls.Add(this.checkBoxWifiRunCode);
+            this.tabPageWifi.Controls.Add(this.buttonWifiSynCode);
+            this.tabPageWifi.Controls.Add(this.checkBoxWifiAutoSave);
+            this.tabPageWifi.Controls.Add(this.buttonWifiLock);
+            this.tabPageWifi.Controls.Add(this.textBoxWifiHeight);
+            this.tabPageWifi.Controls.Add(this.textBoxWifiWidth);
+            this.tabPageWifi.Controls.Add(this.label2);
+            this.tabPageWifi.Controls.Add(this.label3);
+            this.tabPageWifi.Controls.Add(this.buttonSaveCode);
+            this.tabPageWifi.Controls.Add(this.buttonWifiClear);
+            this.tabPageWifi.Controls.Add(this.buttonWifiRecvStart);
+            this.tabPageWifi.Controls.Add(this.comboBoxIP);
+            this.tabPageWifi.Controls.Add(this.buttonWifiLink);
+            this.tabPageWifi.Controls.Add(this.label4);
+            this.tabPageWifi.Controls.Add(this.label5);
+            this.tabPageWifi.Location = new System.Drawing.Point(4, 28);
+            this.tabPageWifi.Name = "tabPageWifi";
+            this.tabPageWifi.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageWifi.Size = new System.Drawing.Size(1590, 125);
+            this.tabPageWifi.TabIndex = 2;
+            this.tabPageWifi.Text = "WiFi";
+            // 
+            // textBoxPort
+            // 
+            this.textBoxPort.Location = new System.Drawing.Point(103, 75);
+            this.textBoxPort.Name = "textBoxPort";
+            this.textBoxPort.Size = new System.Drawing.Size(182, 28);
+            this.textBoxPort.TabIndex = 38;
+            this.textBoxPort.Text = "51234";
+            // 
+            // buttonWifiRunCode
+            // 
+            this.buttonWifiRunCode.Enabled = false;
+            this.buttonWifiRunCode.Location = new System.Drawing.Point(1067, 71);
+            this.buttonWifiRunCode.Name = "buttonWifiRunCode";
+            this.buttonWifiRunCode.Size = new System.Drawing.Size(153, 42);
+            this.buttonWifiRunCode.TabIndex = 33;
+            this.buttonWifiRunCode.Text = "运行程序(&N)";
+            this.buttonWifiRunCode.UseVisualStyleBackColor = true;
+            this.buttonWifiRunCode.Click += new System.EventHandler(this.buttonWifiRun_Click);
+            // 
+            // buttonWifiSaveBmp
+            // 
+            this.buttonWifiSaveBmp.Enabled = false;
+            this.buttonWifiSaveBmp.Location = new System.Drawing.Point(1067, 13);
+            this.buttonWifiSaveBmp.Name = "buttonWifiSaveBmp";
+            this.buttonWifiSaveBmp.Size = new System.Drawing.Size(153, 42);
+            this.buttonWifiSaveBmp.TabIndex = 32;
+            this.buttonWifiSaveBmp.Text = "保存图像(&P)";
+            this.buttonWifiSaveBmp.UseVisualStyleBackColor = true;
+            this.buttonWifiSaveBmp.Click += new System.EventHandler(this.buttonSaveBmp_Click);
+            // 
+            // checkBoxWifiRunCode
+            // 
+            this.checkBoxWifiRunCode.AutoSize = true;
+            this.checkBoxWifiRunCode.Location = new System.Drawing.Point(1275, 81);
+            this.checkBoxWifiRunCode.Name = "checkBoxWifiRunCode";
+            this.checkBoxWifiRunCode.Size = new System.Drawing.Size(142, 22);
+            this.checkBoxWifiRunCode.TabIndex = 35;
+            this.checkBoxWifiRunCode.Text = "自动运行程序";
+            this.checkBoxWifiRunCode.UseVisualStyleBackColor = true;
+            // 
+            // buttonWifiSynCode
+            // 
+            this.buttonWifiSynCode.FlatAppearance.BorderSize = 0;
+            this.buttonWifiSynCode.Location = new System.Drawing.Point(888, 71);
+            this.buttonWifiSynCode.Margin = new System.Windows.Forms.Padding(0);
+            this.buttonWifiSynCode.Name = "buttonWifiSynCode";
+            this.buttonWifiSynCode.Size = new System.Drawing.Size(153, 42);
+            this.buttonWifiSynCode.TabIndex = 29;
+            this.buttonWifiSynCode.Text = "同步程序(&R)";
+            this.buttonWifiSynCode.UseVisualStyleBackColor = true;
+            this.buttonWifiSynCode.Click += new System.EventHandler(this.buttonSyncCode_Click);
+            // 
+            // checkBoxWifiAutoSave
+            // 
+            this.checkBoxWifiAutoSave.AutoSize = true;
+            this.checkBoxWifiAutoSave.Location = new System.Drawing.Point(1275, 23);
+            this.checkBoxWifiAutoSave.Name = "checkBoxWifiAutoSave";
+            this.checkBoxWifiAutoSave.Size = new System.Drawing.Size(142, 22);
+            this.checkBoxWifiAutoSave.TabIndex = 34;
+            this.checkBoxWifiAutoSave.Text = "自动保存图像";
+            this.checkBoxWifiAutoSave.UseVisualStyleBackColor = true;
+            // 
+            // buttonWifiLock
+            // 
+            this.buttonWifiLock.Enabled = false;
+            this.buttonWifiLock.Location = new System.Drawing.Point(530, 71);
+            this.buttonWifiLock.Name = "buttonWifiLock";
+            this.buttonWifiLock.Size = new System.Drawing.Size(153, 42);
+            this.buttonWifiLock.TabIndex = 25;
+            this.buttonWifiLock.Text = "锁定(&D)";
+            this.buttonWifiLock.UseVisualStyleBackColor = true;
+            this.buttonWifiLock.Click += new System.EventHandler(this.buttonWifiLock_Click);
+            // 
+            // textBoxWifiHeight
+            // 
+            this.textBoxWifiHeight.Location = new System.Drawing.Point(399, 74);
+            this.textBoxWifiHeight.Name = "textBoxWifiHeight";
+            this.textBoxWifiHeight.Size = new System.Drawing.Size(103, 28);
+            this.textBoxWifiHeight.TabIndex = 23;
+            this.textBoxWifiHeight.Text = "60";
+            // 
+            // textBoxWifiWidth
+            // 
+            this.textBoxWifiWidth.Location = new System.Drawing.Point(399, 19);
+            this.textBoxWifiWidth.Name = "textBoxWifiWidth";
+            this.textBoxWifiWidth.Size = new System.Drawing.Size(103, 28);
+            this.textBoxWifiWidth.TabIndex = 22;
+            this.textBoxWifiWidth.Text = "160";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(317, 79);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(80, 18);
+            this.label2.TabIndex = 37;
+            this.label2.Text = "图像高：";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(317, 24);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(80, 18);
+            this.label3.TabIndex = 36;
+            this.label3.Text = "图像宽：";
+            // 
+            // buttonSaveCode
+            // 
+            this.buttonSaveCode.Location = new System.Drawing.Point(888, 13);
+            this.buttonSaveCode.Name = "buttonSaveCode";
+            this.buttonSaveCode.Size = new System.Drawing.Size(153, 42);
+            this.buttonSaveCode.TabIndex = 28;
+            this.buttonSaveCode.Text = "保存程序(&S)";
+            this.buttonSaveCode.UseVisualStyleBackColor = true;
+            this.buttonSaveCode.Click += new System.EventHandler(this.buttonIniSave_Click);
+            // 
+            // buttonWifiClear
+            // 
+            this.buttonWifiClear.Enabled = false;
+            this.buttonWifiClear.Location = new System.Drawing.Point(709, 71);
+            this.buttonWifiClear.Name = "buttonWifiClear";
+            this.buttonWifiClear.Size = new System.Drawing.Size(153, 42);
+            this.buttonWifiClear.TabIndex = 27;
+            this.buttonWifiClear.Text = "清除当前图像(&C)";
+            this.buttonWifiClear.UseVisualStyleBackColor = true;
+            this.buttonWifiClear.Click += new System.EventHandler(this.buttonClearBmp_Click);
+            // 
+            // buttonWifiRecvStart
+            // 
+            this.buttonWifiRecvStart.Enabled = false;
+            this.buttonWifiRecvStart.Location = new System.Drawing.Point(709, 13);
+            this.buttonWifiRecvStart.Name = "buttonWifiRecvStart";
+            this.buttonWifiRecvStart.Size = new System.Drawing.Size(153, 42);
+            this.buttonWifiRecvStart.TabIndex = 26;
+            this.buttonWifiRecvStart.Text = "开始接收图像(&G)";
+            this.buttonWifiRecvStart.UseVisualStyleBackColor = true;
+            this.buttonWifiRecvStart.Click += new System.EventHandler(this.buttonWifiRecvStart_Click);
+            // 
+            // comboBoxIP
+            // 
+            this.comboBoxIP.FormattingEnabled = true;
+            this.comboBoxIP.Location = new System.Drawing.Point(103, 20);
+            this.comboBoxIP.Name = "comboBoxIP";
+            this.comboBoxIP.Size = new System.Drawing.Size(182, 26);
+            this.comboBoxIP.TabIndex = 20;
+            this.comboBoxIP.Text = "192.168.4.2";
+            // 
+            // buttonWifiLink
+            // 
+            this.buttonWifiLink.Enabled = false;
+            this.buttonWifiLink.Location = new System.Drawing.Point(530, 13);
+            this.buttonWifiLink.Name = "buttonWifiLink";
+            this.buttonWifiLink.Size = new System.Drawing.Size(153, 42);
+            this.buttonWifiLink.TabIndex = 24;
+            this.buttonWifiLink.Text = "连接(&L)";
+            this.buttonWifiLink.UseVisualStyleBackColor = true;
+            this.buttonWifiLink.Click += new System.EventHandler(this.buttonWifiLink_Click);
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(18, 24);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(80, 18);
+            this.label4.TabIndex = 30;
+            this.label4.Text = "IP地址：";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(18, 79);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(80, 18);
+            this.label5.TabIndex = 31;
+            this.label5.Text = "端口号：";
+            // 
+            // serialPort1
+            // 
+            this.serialPort1.BaudRate = 115200;
+            this.serialPort1.ReadBufferSize = 32768;
+            this.serialPort1.DataReceived += new System.IO.Ports.SerialDataReceivedEventHandler(this.serialPort1_DataReceived);
+            // 
+            // timerUartCheck
+            // 
+            this.timerUartCheck.Interval = 25;
+            this.timerUartCheck.Tick += new System.EventHandler(this.timerUartCheck_Tick);
+            // 
+            // groupBoxInfo
+            // 
+            this.groupBoxInfo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.groupBoxInfo.Controls.Add(this.labelWifiTime);
+            this.groupBoxInfo.Controls.Add(this.labelRecvFrameRateEff);
+            this.groupBoxInfo.Controls.Add(this.labelRecvFrameRate);
+            this.groupBoxInfo.Controls.Add(this.labelRecvSumFrameTime);
+            this.groupBoxInfo.Controls.Add(this.labelRecvOneFrameTime);
+            this.groupBoxInfo.Controls.Add(this.labelRecvErrRate);
+            this.groupBoxInfo.Controls.Add(this.labelRecvCnt);
+            this.groupBoxInfo.Controls.Add(this.label01State);
+            this.groupBoxInfo.Controls.Add(this.labelPicMode);
+            this.groupBoxInfo.Controls.Add(this.labelPicAllCnt);
+            this.groupBoxInfo.Controls.Add(this.labelPixelInfo);
+            this.groupBoxInfo.Controls.Add(this.labelRecvByte);
+            this.groupBoxInfo.Controls.Add(this.labelPicIndex);
+            this.groupBoxInfo.Controls.Add(this.panel1);
+            this.groupBoxInfo.Location = new System.Drawing.Point(16, 196);
+            this.groupBoxInfo.Name = "groupBoxInfo";
+            this.groupBoxInfo.Size = new System.Drawing.Size(330, 686);
+            this.groupBoxInfo.TabIndex = 60;
+            this.groupBoxInfo.TabStop = false;
+            this.groupBoxInfo.Text = "信息栏";
+            // 
+            // labelWifiTime
+            // 
+            this.labelWifiTime.AutoSize = true;
+            this.labelWifiTime.Location = new System.Drawing.Point(13, 650);
+            this.labelWifiTime.Name = "labelWifiTime";
+            this.labelWifiTime.Size = new System.Drawing.Size(161, 18);
+            this.labelWifiTime.TabIndex = 69;
+            this.labelWifiTime.Text = "图传启动时间：0 s";
+            // 
+            // labelRecvFrameRateEff
+            // 
+            this.labelRecvFrameRateEff.AutoSize = true;
+            this.labelRecvFrameRateEff.Location = new System.Drawing.Point(13, 600);
+            this.labelRecvFrameRateEff.Name = "labelRecvFrameRateEff";
+            this.labelRecvFrameRateEff.Size = new System.Drawing.Size(179, 18);
+            this.labelRecvFrameRateEff.TabIndex = 68;
+            this.labelRecvFrameRateEff.Text = "平均有效帧率：0 fps";
+            // 
+            // labelRecvFrameRate
+            // 
+            this.labelRecvFrameRate.AutoSize = true;
+            this.labelRecvFrameRate.Location = new System.Drawing.Point(13, 550);
+            this.labelRecvFrameRate.Name = "labelRecvFrameRate";
+            this.labelRecvFrameRate.Size = new System.Drawing.Size(143, 18);
+            this.labelRecvFrameRate.TabIndex = 67;
+            this.labelRecvFrameRate.Text = "平均帧率：0 fps";
+            // 
+            // labelRecvSumFrameTime
+            // 
+            this.labelRecvSumFrameTime.AutoSize = true;
+            this.labelRecvSumFrameTime.Location = new System.Drawing.Point(13, 500);
+            this.labelRecvSumFrameTime.Name = "labelRecvSumFrameTime";
+            this.labelRecvSumFrameTime.Size = new System.Drawing.Size(179, 18);
+            this.labelRecvSumFrameTime.TabIndex = 66;
+            this.labelRecvSumFrameTime.Text = "平均帧间隔时间：0 s";
+            // 
+            // labelRecvOneFrameTime
+            // 
+            this.labelRecvOneFrameTime.AutoSize = true;
+            this.labelRecvOneFrameTime.Location = new System.Drawing.Point(13, 450);
+            this.labelRecvOneFrameTime.Name = "labelRecvOneFrameTime";
+            this.labelRecvOneFrameTime.Size = new System.Drawing.Size(197, 18);
+            this.labelRecvOneFrameTime.TabIndex = 65;
+            this.labelRecvOneFrameTime.Text = "平均单帧接收时间：0 s";
+            // 
+            // labelRecvErrRate
+            // 
+            this.labelRecvErrRate.AutoSize = true;
+            this.labelRecvErrRate.Location = new System.Drawing.Point(13, 400);
+            this.labelRecvErrRate.Name = "labelRecvErrRate";
+            this.labelRecvErrRate.Size = new System.Drawing.Size(161, 18);
+            this.labelRecvErrRate.TabIndex = 64;
+            this.labelRecvErrRate.Text = "接收错误率：0.00%";
+            // 
+            // labelRecvCnt
+            // 
+            this.labelRecvCnt.AutoSize = true;
+            this.labelRecvCnt.Location = new System.Drawing.Point(13, 300);
+            this.labelRecvCnt.Name = "labelRecvCnt";
+            this.labelRecvCnt.Size = new System.Drawing.Size(125, 18);
+            this.labelRecvCnt.TabIndex = 62;
+            this.labelRecvCnt.Text = "接收图片数：0";
+            // 
+            // label01State
+            // 
+            this.label01State.AutoSize = true;
+            this.label01State.Location = new System.Drawing.Point(13, 250);
+            this.label01State.Name = "label01State";
+            this.label01State.Size = new System.Drawing.Size(206, 18);
+            this.label01State.TabIndex = 61;
+            this.label01State.Text = "二值化显示状态：标准色";
+            // 
+            // labelPicMode
+            // 
+            this.labelPicMode.AutoSize = true;
+            this.labelPicMode.Location = new System.Drawing.Point(13, 200);
+            this.labelPicMode.Name = "labelPicMode";
+            this.labelPicMode.Size = new System.Drawing.Size(152, 18);
+            this.labelPicMode.TabIndex = 60;
+            this.labelPicMode.Text = "图像模式：处理图";
+            // 
+            // panel1
+            // 
+            this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel1.Location = new System.Drawing.Point(3, 24);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(324, 659);
+            this.panel1.TabIndex = 70;
             // 
             // 赞赏ToolStripMenuItem
             // 
@@ -750,13 +1357,14 @@ namespace TheveSmartCar
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1531, 1099);
+            this.ClientSize = new System.Drawing.Size(1626, 1128);
+            this.Controls.Add(this.groupBoxInfo);
+            this.Controls.Add(this.tabControlMode);
             this.Controls.Add(this.buttonSplit);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.menuStrip1);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.tabControl1);
-            this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.groupBox2);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
@@ -764,39 +1372,48 @@ namespace TheveSmartCar
             this.Name = "SmartCarMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "智能车图像处理系统";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.SmartCarMain_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
+            this.SizeChanged += new System.EventHandler(this.SmartCarMain_SizeChanged);
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
-            this.tabPage2.ResumeLayout(false);
-            this.tabPage2.PerformLayout();
-            this.tabPage1.ResumeLayout(false);
-            this.tabPage0.ResumeLayout(false);
+            this.tabPageHelp.ResumeLayout(false);
+            this.tabPageHelp.PerformLayout();
+            this.tabPageParamView.ResumeLayout(false);
+            this.tabPageCodeEditer.ResumeLayout(false);
             this.tabControl1.ResumeLayout(false);
+            this.tabPageArrayView.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
             this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureShow)).EndInit();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            this.tabControlMode.ResumeLayout(false);
+            this.tabPagelocal.ResumeLayout(false);
+            this.tabPagelocal.PerformLayout();
+            this.tabPageUart.ResumeLayout(false);
+            this.tabPageUart.PerformLayout();
+            this.tabPageWifi.ResumeLayout(false);
+            this.tabPageWifi.PerformLayout();
+            this.groupBoxInfo.ResumeLayout(false);
+            this.groupBoxInfo.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
         }
 
         #endregion
-        private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Label labelDepth;
         private System.Windows.Forms.Label labelResoultion;
-        private System.Windows.Forms.Button buttonChange;
+        private System.Windows.Forms.Button buttonDisplayChange;
         private System.Windows.Forms.Button buttonIniRecover;
         private System.Windows.Forms.Button buttonIniSave;
         private System.Windows.Forms.Button buttonDirectionBmp;
         private System.Windows.Forms.Button buttonCodeLock;
-        private System.Windows.Forms.Button buttonLast;
-        private System.Windows.Forms.Button buttonNext;
+        private System.Windows.Forms.Button buttonLastPic;
+        private System.Windows.Forms.Button buttonNextPic;
         private System.Windows.Forms.ComboBox comboBoxAutoInterval;
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.Label label14;
@@ -807,31 +1424,28 @@ namespace TheveSmartCar
         private System.Windows.Forms.TextBox textBoxStartNum;
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
-        private System.Windows.Forms.Label labelState;
+        private System.Windows.Forms.Label labelCompileState;
         private System.Windows.Forms.Timer timer1;
-        private System.Windows.Forms.TabPage tabPage2;
+        private System.Windows.Forms.TabPage tabPageHelp;
         private System.Windows.Forms.TextBox textBoxHelp;
-        private System.Windows.Forms.TabPage tabPage1;
+        private System.Windows.Forms.TabPage tabPageParamView;
         private System.Windows.Forms.RichTextBox richTextBoxWatch;
-        private System.Windows.Forms.TabPage tabPage0;
+        private System.Windows.Forms.TabPage tabPageCodeEditer;
         private System.Windows.Forms.RichTextBox richTextBoxPicPro;
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.TextBox textBoxDebug;
-        private System.Windows.Forms.Label labelPicNumShow;
-        private System.Windows.Forms.Label labelOrinial;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label labelPicIndex;
+        private System.Windows.Forms.Label labelPixelInfo;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.PictureBox pictureShow;
-        private System.Windows.Forms.Label labelPicAllNum;
-        private System.Windows.Forms.Button buttonUnique;
+        private System.Windows.Forms.Label labelPicAllCnt;
+        private System.Windows.Forms.Button buttonSyncCode;
         private System.Windows.Forms.Button buttonAntiColor;
-        private System.Windows.Forms.Label labelAntiColor;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem ToolStripMenuItemFile;
         private System.Windows.Forms.ToolStripMenuItem ToolStripMenuItemSetting;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemIniRecover;
-        private System.Windows.Forms.ToolStripMenuItem ToolStripMenuItemHideDebug;
+        private System.Windows.Forms.ToolStripMenuItem 隐藏相关信息栏ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 主题ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 白色ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 黑色ToolStripMenuItem;
@@ -842,11 +1456,67 @@ namespace TheveSmartCar
         private System.Windows.Forms.ToolStripMenuItem 鼠标样式ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 箭头ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 十字ToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem 隐藏ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 圆圈ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 显示模式ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 拉伸模式ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 等宽长缩放ToolStripMenuItem;
+        private System.Windows.Forms.TabControl tabControlMode;
+        private System.Windows.Forms.TabPage tabPagelocal;
+        private System.Windows.Forms.TabPage tabPageUart;
+        private System.Windows.Forms.ComboBox comboBoxCom;
+        private System.Windows.Forms.Button buttonSerialOpen;
+        private System.Windows.Forms.ComboBox comboBoxBaud;
+        private System.Windows.Forms.Label labelSerialPort;
+        private System.Windows.Forms.Label labelBaud;
+        private System.IO.Ports.SerialPort serialPort1;
+        private System.Windows.Forms.Button buttonUartRecvStart;
+        private System.Windows.Forms.Button buttonClearBmp;
+        private System.Windows.Forms.Button buttonSaveBmp;
+        private System.Windows.Forms.TextBox textBoxPicHeight;
+        private System.Windows.Forms.TextBox textBoxPicWidth;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.ToolStripMenuItem 全屏启动ToolStripMenuItem;
+        private System.Windows.Forms.Button buttonUartLock;
+        private System.Windows.Forms.CheckBox checkBoxAutoSave;
+        private System.Windows.Forms.Button buttonUartSynCode;
+        private System.Windows.Forms.CheckBox checkBoxRunCode;
+        private System.Windows.Forms.Button buttonUartRunCode;
+        private System.Windows.Forms.Button buttonUartSaveBmp;
+        private System.Windows.Forms.Timer timerUartCheck;
+        private System.Windows.Forms.Label labelRecvByte;
+        private System.Windows.Forms.TabPage tabPageWifi;
+        private System.Windows.Forms.Button buttonWifiRunCode;
+        private System.Windows.Forms.CheckBox checkBoxWifiRunCode;
+        private System.Windows.Forms.Button buttonWifiSynCode;
+        private System.Windows.Forms.CheckBox checkBoxWifiAutoSave;
+        private System.Windows.Forms.Button buttonWifiLock;
+        private System.Windows.Forms.TextBox textBoxWifiHeight;
+        private System.Windows.Forms.TextBox textBoxWifiWidth;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Button buttonSaveCode;
+        private System.Windows.Forms.Button buttonWifiClear;
+        private System.Windows.Forms.Button buttonWifiRecvStart;
+        private System.Windows.Forms.ComboBox comboBoxIP;
+        private System.Windows.Forms.Button buttonWifiLink;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.TextBox textBoxPort;
+        private System.Windows.Forms.GroupBox groupBoxInfo;
+        private System.Windows.Forms.Label labelRecvFrameRateEff;
+        private System.Windows.Forms.Label labelRecvFrameRate;
+        private System.Windows.Forms.Label labelRecvSumFrameTime;
+        private System.Windows.Forms.Label labelRecvOneFrameTime;
+        private System.Windows.Forms.Label labelRecvErrRate;
+        private System.Windows.Forms.Label labelRecvCnt;
+        private System.Windows.Forms.Label label01State;
+        private System.Windows.Forms.Label labelPicMode;
+        private System.Windows.Forms.Button buttonWifiSaveBmp;
+        private System.Windows.Forms.Label labelWifiTime;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.TabPage tabPageArrayView;
+        private System.Windows.Forms.DataGridView dataGridView1;
         private System.Windows.Forms.ToolStripMenuItem theve开源软件ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 赞赏ToolStripMenuItem;
     }

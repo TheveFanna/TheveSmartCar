@@ -39,8 +39,12 @@ namespace TheveSmartCar
             }
         }
 
-
-        public static void RadioCheck(ToolStripMenuItem toolStripMenuItem, ToolStripItem t)
+        /// <summary>
+        /// 勾选，多子菜单,单一勾选
+        /// </summary>
+        /// <param name="toolStripMenuItem">一级菜单项</param>
+        /// <param name="t">二级菜单勾选项</param>
+        public static void SetMenuCheck(ToolStripMenuItem toolStripMenuItem, ToolStripItem t)
         {
             foreach (ToolStripMenuItem i in toolStripMenuItem.DropDownItems)
             {
@@ -55,5 +59,53 @@ namespace TheveSmartCar
             }
 
         }
+        /// <summary>
+        /// 获取一级菜单下的二级菜单哪个被勾选了
+        /// </summary>
+        /// <param name="toolStripMenuItem">一级菜单</param>
+        /// <param name="t">被勾选的二级菜单</param>
+        public static ToolStripMenuItem GetMenuCheck(ToolStripMenuItem toolStripMenuItem)
+        {
+            foreach (ToolStripMenuItem i in toolStripMenuItem.DropDownItems)
+            {
+                if (i.Checked)
+                {
+                    return i;
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// 通过字符串获取二级菜单的对象
+        /// </summary>
+        /// <param name="toolStripMenuItem">一级菜单</param>
+        /// <param name="toolStripItemName">二级菜单的名字</param>
+        /// <returns></returns>
+        public static ToolStripItem NameToObject(ToolStripMenuItem toolStripMenuItem, string toolStripItemName)
+        {
+            foreach (ToolStripItem i in toolStripMenuItem.DropDownItems)
+            {
+                if (i.Name == toolStripItemName)
+                {
+                    return i;
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// 勾选状态改变
+        /// </summary>
+        /// <param name="sender"></param>
+        public static void SingleCheckTrans(object sender)
+        {
+            if (sender is ToolStripMenuItem)
+            {
+                ToolStripMenuItem toolStripMenuItem = sender as ToolStripMenuItem;
+                toolStripMenuItem.Checked = !toolStripMenuItem.Checked;
+            }
+        }
+
     }
 }
