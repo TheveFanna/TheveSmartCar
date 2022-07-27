@@ -13,6 +13,7 @@ using ThevePictureProcessDll;
 using TheveSmartCar.Properties;
 using static TheveSmartCar.ThevePictureProcess;
 
+
 namespace TheveSmartCar
 {
     public partial class SmartCarMain : Form
@@ -21,6 +22,7 @@ namespace TheveSmartCar
         bool IsDebugMode = false;
         //跳过运行程序
         bool isPassCompileRun = false;
+
         //接收图像数据
         List<Byte> listRecvPicData = new List<byte>();
         private void Form1_Load(object sender, EventArgs e)
